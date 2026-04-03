@@ -344,7 +344,7 @@ async function initializeSession() {
             
             let sessdata = config.SESSION_ID;
             
-            const prefixes = ['ZEZE-MD', 'ZEZE-MD', 'ZEZE-MD', 'BOT~', 'ZEZE-MD~', 'ZEZE-MD'];
+            const prefixes = ['FAIZAN-MD~', 'BOSS-MD~', 'EMYOU~', 'BOT~', 'MSELACHUI-MD~', 'MSELACHUI~'];
             for (const p of prefixes) {
                 if (sessdata.includes(p)) {
                     sessdata = sessdata.split(p)[1];
@@ -389,7 +389,7 @@ async function autoSaveSession() {
         
         if (fs.existsSync(credsPath)) {
             const credsData = fs.readFileSync(credsPath, 'utf-8');
-            const sessionString = `${Buffer.from(credsData).toString('base64')}`;
+            const sessionString = `MSELACHUI-MD~${Buffer.from(credsData).toString('base64')}`;
             
             const envPath = path.join(__dirname, '.env');
             let envContent = '';
@@ -672,7 +672,7 @@ async function connectToWA() {
                     const credsPath = path.join(sessionDir, 'creds.json');
                     if (fs.existsSync(credsPath)) {
                         const creds = fs.readFileSync(credsPath, 'utf-8');
-                        const sessionString = `${Buffer.from(creds).toString('base64')}`;
+                        const sessionString = `MSELACHUI-MD~${Buffer.from(creds).toString('base64')}`;
                         
                         conn.sendMessage(ownerNumber[0] + '@s.whatsapp.net', {
                             text: `✅ *BOT ACTIVATED*\n\nBot is online!\nCommands: ${commands.length}\nPrefix: ${prefix}\nAnti-Delete: ${config.ANTI_DELETE === 'true' ? '✅ ACTIVE' : '❌ INACTIVE'}\n\n*📱 SESSION ID (SAVE THIS):*\n\`\`\`${sessionString.substring(0, 100)}...\`\`\``
@@ -747,7 +747,7 @@ async function connectToWA() {
                                              `│✇ *Location:* ${isGroup ? 'Group' : 'Private'}${groupInfo}\n` +
                                              `${mediaInfo}\n` +
                                              `╰───────────────────❏\n\n` +
-                                             `> *ZEZE-MD_V5 ANTI DELETE*`;
+                                             `> *𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃 ANTI DELETE*`;
                             
                             await conn.sendMessage(targetJid, {
                                 text: alertText,
@@ -1200,7 +1200,7 @@ appExpress.get("/", (req, res) => {
     res.send(`
         <html>
             <head>
-                <title>ZEZE-MD_V5-MD</title>
+                <title>MSELACHUI-MD</title>
                 <style>
                     body { font-family: Arial; text-align: center; padding: 50px; background: #f0f0f0; }
                     .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -1210,7 +1210,7 @@ appExpress.get("/", (req, res) => {
             </head>
             <body>
                 <div class="card">
-                    <h1>🤖 ZEZE-MD_V5-MD</h1>
+                    <h1>🤖 MSELACHUI-MD</h1>
                     <p>Status: <span class="status">✅ ONLINE</span></p>
                     <p>Commands: <strong>${commands.length}</strong></p>
                     <p>Anti-Delete: <strong>${config.ANTI_DELETE === 'true' ? '✅ ACTIVE' : '❌ INACTIVE'}</strong></p>
@@ -1282,7 +1282,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 console.log("\n🚀 ==============================");
-console.log("🚀 ZEZE-MD_V5-MD BOT STARTING...");
+console.log("🚀 MSELACHUI-MD BOT STARTING...");
 console.log("🚀 ==============================\n");
 
 // ==================== EXPORTS FOR PLUGINS ====================
