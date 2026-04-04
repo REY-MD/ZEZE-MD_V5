@@ -1,12 +1,12 @@
 {
-  "name": "𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃",
+  "name": "ZEZE-MD",
   "version": "5.0.0",
   "description": "A WhatsApp Bot Created By mselachui-teach",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name mselachui-md",
-    "stop": "pm2 stop mselachui-md",
-    "restart": "pm2 restart mselachui-md"
+    "start": "pm2 start index.js --deep-monitoring --attach --name index.js",
+    "stop": "pm2 stop index.js",
+    "restart": "pm2 restart index.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "v7.0.0-rc.6",
