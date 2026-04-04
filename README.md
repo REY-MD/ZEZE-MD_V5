@@ -25,7 +25,7 @@
 4.👇 Deploy to Heroku If your have account
 [![Deploy to Heroku](https://img.shields.io/static/v1?label=Deploy%20to&message=Heroku&color=430098&style=for-the-badge&logo=heroku&logoColor=white)](https://dashboard.heroku.com/new?template=https://github.com/REY-MD/ZEZE-MD_V5)  
 
-## 🔹 DEPLOY ON OTHER PLATFORMS
+#🔹 DEPLOY ON OTHER PLATFORMS
 - **Render:**  
   [![Click Here](https://img.shields.io/badge/➤Click-Here-black.svg)](https://render.com)
 
