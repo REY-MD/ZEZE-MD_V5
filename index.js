@@ -630,5 +630,3 @@ appExpress.listen(port, '0.0.0.0', () => {
 setTimeout(() => {
     connectToWA();
 }, 8000);
-
-console.log("\n🚀 ZEZE-MD BOT STARTING...\n");
