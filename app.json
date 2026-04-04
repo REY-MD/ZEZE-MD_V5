@@ -1,14 +1,14 @@
 {
   "name": "ZEZE-MD",
   "description": "Javascript WhatsApp bot made by ZEZE-TEACH",
-  "logo": "https://files.catbox.moe/qyskpc.jpg",
+  "logo": "https://files.catbox.moe/sez5vx.jpg",
   "keywords": ["ZEZE-MD"],
   "success_url": "/",
 
     "stack": "container",
   "env": {
     "SESSION_ID": {
-      "description": "Put the session-id here,MSELACHUI-MD~eyJub---",
+      "description": "Put the session-id here,ZEZE-MD~eyJub---",
       "required": true,
       "value": ""
     },  
@@ -16,13 +16,13 @@
     "STICKER_NAME": {
       "description": "type your sticker pack name.",
       "required": false,
-      "value": "𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃"
+      "value": "ZEZE TECH"
     }, 
       
     "PREFIX": {
       "description": "paste your bot prefix note! Don't apply null prefix.",
       "required": false,
-      "value": "."
+      "value": "?"
     },
     
     "MODE": {
@@ -78,27 +78,27 @@
     "AUTO_STATUS_MSG": {
       "description": "Type custom message on status reply",
       "required": true,
-      "value": "*SEEN YOUR STATUS BY ZEZE-MD🐯*"
+      "value": "*SEEN YOUR STATUS BY ZEZE-MD🪕*"
    
      }, 
     
     "OWNER_NAME": {
       "description": "Type Bot Owner Name.",
       "required": false,
-      "value": "*ZEZE-MD*"
+      "value": "*ZEZE-TECH*"
 }, 
 
     "OWNER_NUMBER": {
       "description": "put the owner number for bot.",
       "required": false,
-      "value": "2556xxxxxxxx"
+      "value": "255617xxxxxx"
 
     }, 
 
     "BOT_NAME": {
       "description": "Type here the bot name.",
       "required": false,
-      "value": "ZEZE-MD"
+      "value": "ZEZE-MD_V5"
 
       }, 
 
@@ -131,13 +131,13 @@
     "MENU_IMAGE_URL": {
       "description": "add url for mention reply and menu if want.",
       "required": false,
-      "value": ""
+      "value": "https://files.catbox.moe/sez5vx.jpg"
     },
     
      "DESCRIPTION": {
       "description": "add caption for menu and other",
       "required": false,
-      "value": "*📌 ZEZE-MD*"
+      "value": "*📌 ZEZE-MD_V5*"
     },
 
       "DELETE_LINKS": {
@@ -149,7 +149,7 @@
     "AUTO_RECORDING": {
       "description": "Make it true if you want auto recoding.",
       "required": false,
-      "value": "false"
+      "value": "true"
     },
 
     "AUTO_TYPING": {
@@ -180,7 +180,7 @@
     "ANTI_DEL_PATH": {
       "description": "change it to -same- if you want to resend deleted message in same chat othwise inbox",
       "required": false,
-      "value": "inbox"
+      "value": "same"
     }, 
 
     "ADMIN_EVENTS": {
@@ -192,7 +192,7 @@
     "WELCOME": {
       "description": "make it true if want goodbye and welcome message in groups.",
       "required": false,
-      "value": "false"
+      "value": "true"
     },
 
     "READ_MESSAGE": {
