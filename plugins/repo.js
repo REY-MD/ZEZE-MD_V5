@@ -50,7 +50,7 @@ cmd({
 `;
 
         await conn.sendMessage(from, {
-            image: { url: 'https://files.catbox.moe/78gezo.jpg' },
+            image: { url: 'https://files.catbox.moe/sez5vx.jpg' },
             caption,
             contextInfo: {
                 mentionedJid: [m.sender],
