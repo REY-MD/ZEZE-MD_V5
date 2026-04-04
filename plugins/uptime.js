@@ -5,7 +5,7 @@ const config = require('../config');
 cmd({
     pattern: "uptime",
     alias: ["runtime", "up"],
-    desc: "Live uptime with ZEZE-MD style",
+    desc: "Live uptime with ZEZE-MD_V5 style",
     category: "main",
     react: "⏱️",
     filename: __filename
@@ -14,7 +14,7 @@ cmd({
 
         // First message
         let sent = await conn.sendMessage(from, {
-            text: "⏳ *ZEZE-MD starting uptime…*"
+            text: "⏳ *ZEZE-MD_V5 starting uptime…*"
         }, { quoted: mek });
 
         // Run for 60 seconds (1 minute)
@@ -24,7 +24,7 @@ cmd({
 
             const text = `
 *╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ ZEZE-TECH ⊱┈─̇─̣╌*
+*│ ╌─̇─̣⊰ ZEZE-MD_V5⊱┈─̇─̣╌*
 *│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
 *│❀ ⏱️ 𝐔𝐩𝐭𝐢𝐦𝐞:* ${up}
 *│❀ 🤖 𝐁𝐨𝐭:* ${config.BOT_NAME}
