@@ -11,7 +11,7 @@ const config = require('../config');
 ======================= */
 cmd({
     pattern: "ping",
-    react: "🌈",
+    react: "❣️",
     desc: "Check system speed & full report",
     category: "main",
     filename: __filename
@@ -23,7 +23,7 @@ async (conn, mek, m, { from, reply }) => {
         const caption = `
 ┌───〔 💻 TERMINAL STATUS // ROOT ACCESS 〕───┐
 │
-│ 👤 USER      :: 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃 _⁸⁷³
+│ 👤 USER      :: ZEZE-MD_V5
 │ ─────────────────────────────────────
 │ ⚡ SPEED     :: ${speed} ms
 │ 🧠 UPTIME    :: ${runtime(process.uptime())}
@@ -34,7 +34,7 @@ async (conn, mek, m, { from, reply }) => {
 ├──────────────────────────────────────
 │ 🟢 STATUS    :: ONLINE
 │ 🔐 ACCESS    :: GRANTED
-└───〔 ⚔️ 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃 CORE 〕───┘
+└───〔 ⚔️ ZEZE TECH CORE 〕───┘
 
 > [ SYSTEM READY FOR COMMANDS... ]
 `;
@@ -46,8 +46,8 @@ async (conn, mek, m, { from, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363423019441144@newsletter',
-                    newsletterName: '𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃',
+                    newsletterJid: '@newsletter',
+                    newsletterName: 'ZEZE TECH',
                     serverMessageId: 143
                 }
             }
@@ -89,7 +89,7 @@ async (conn, mek, m, { from, reply }) => {
 
         const msg = `
 *╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃  ⊱┈─̇─̣╌*
+*│ ╌─̇─̣⊰ ZEZE-MD_V5  ⊱┈─̇─̣╌*
 *│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
 *│⚡ 𝐐𝐔𝐈𝐂𝐊 𝐏𝐈𝐍𝐆*
 *│*
@@ -98,7 +98,7 @@ async (conn, mek, m, { from, reply }) => {
 *│📦 𝐕𝐞𝐫𝐬𝐢𝐨𝐧:* v${config.VERSION || "5.0.0"}
 *╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
 
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃
+> 📌 ᴘᴏᴡᴇʀ ʙʏ ZEZE TECH
 `;
 
         await conn.sendMessage(from, {
@@ -108,8 +108,8 @@ async (conn, mek, m, { from, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363423019441144@newsletter',
-                    newsletterName: '𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃',
+                    newsletterJid: '@newsletter',
+                    newsletterName: 'ZEZE TECH',
                     serverMessageId: 143
                 }
             }
