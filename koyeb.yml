@@ -1,6 +1,6 @@
-name: ZEZE-TECH
+name: 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃
 services:
-  - name: ZEZE-TECH-service
+  - name: 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃-service
     type: web
     ports:
       - 5000
