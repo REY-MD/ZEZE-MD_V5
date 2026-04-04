@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const axios = require("axios");
 
 cmd({
-    pattern: "url",
+    pattern: "tiny",
     alias: ['short', 'shorturl'],
     react: "🫧",
     desc: "Makes URL tiny.",
