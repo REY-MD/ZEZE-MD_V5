@@ -1,73 +1,69 @@
-const config = require('../config')
-const { cmd } = require('../command')
-const os = require("os")
-const { runtime, sleep } = require('../lib/functions')
-const axios = require('axios')
+const fetch = require('node-fetch');
+const config = require('../config');    
+const { cmd } = require('../command');
 
 cmd({
     pattern: "repo",
-    alias: ["sc", "script", "repository"],
-    desc: "Show the bot's GitHub repository",
+    alias: ["sc", "script", "info"],
+    desc: "Fetch information about a GitHub repository.",
     react: "📂",
     category: "info",
     filename: __filename,
 },
 async (conn, mek, m, { from, reply }) => {
-    const githubRepoURL = '.github';
+    const githubRepoURL = 'https://github.com/';
 
     try {
+        // Extract username and repo name from the URL
         const [, username, repoName] = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
 
-        const response = await axios.get(``);
-        const repoData = response.data;
+        // Fetch repository details using GitHub API
+        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+        
+        if (!response.ok) {
+            throw new Error(`GitHub API request failed with status ${response.status}`);
+        }
 
-        const formattedInfo = `
-╭─〔 *PK-XMD REPOSITORY* 〕
-│
-├─ *📌 Repo Name:* ${repoData.name}
-├─ *👤 Owner:* ${repoData.owner.login}
-├─ *⭐ Stars:* ${repoData.stargazers_count}
-├─ *⑂ Forks:* ${repoData.forks_count}
-├─ *📄 Description:* ${repoData.description || 'Powerful WhatsApp Multi-Device Bot by ZEZE TECH'}
-│
-├─ *🔗 GitHub Link:*
-│   ${repoData.html_url}
-│
-├─ *🌍 Channel:*
-│   
-│
-╰─ *🚀 Powered by Pkdriller*
-`.trim();
+        const repoData = await response.json();
 
+        // Format the repository information
+        const formattedInfo = `*BOT NAME:* *${repoData.name}*\n\n*OWNER NAME:* *${repoData.owner.login}*\n\n*STARS:* *${repoData.stargazers_count}*\n\n*FORKS:* *${repoData.forks_count}*\n\n*GITHUB LINK:*\n> ${repoData.html_url}\n\n*DESCRIPTION:*\n> ${repoData.description || 'No description'}\n\n*Don't Forget To Star and Fork Repository*\n\n> *© Powered By ZEZE TECH🖤*`;
+
+        // Send an image with the formatted info as a caption and context info
         await conn.sendMessage(from, {
-            image: { url: `` }, // you can change image
+            image: { url: `` },
             caption: formattedInfo,
-            contextInfo: {
+            contextInfo: { 
                 mentionedJid: [m.sender],
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '@newsletter',
-                    newsletterName: 'ZEZE UPDATES',
-                    serverMessageId: 110
+                    newsletterName: 'ZEZE TECH',
+                    serverMessageId: 143
                 }
             }
-        }, { quoted: {
-            key: {
-                fromMe: false,
-                participant: `0@s.whatsapp.net`,
-                remoteJid: "status@broadcast"
-            },
-            message: {
-                contactMessage: {
-                    displayName: "ZEZE TECH VERIFIED",
-                    vcard: `BEGIN:VCARD\nVERSION:3.0\nN:ZEZE;BOT;;;\nFN:ZEZE\nitem1.TEL;waid=254700000000:+254 700 000000\nitem1.X-ABLabel:Bot\nEND:VCARD`
+        }, { quoted: mek });
+
+        // Send the audio file with context info
+        await conn.sendMessage(from, {
+            audio: { url: '' },
+            mimetype: 'audio/mp4',
+            ptt: true,
+            contextInfo: { 
+                mentionedJid: [m.sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '@newsletter',
+                    newsletterName: 'ZEZE TECH',
+                    serverMessageId: 143
                 }
             }
-        } });
+        }, { quoted: mek });
 
     } catch (error) {
-        console.error("❌ Error fetching repo:", error);
-        reply("❌ Failed to fetch repository info. Please try again later.");
+        console.error("Error in repo command:", error);
+        reply("Sorry, something went wrong while fetching the repository information. Please try again later.");
     }
 });
