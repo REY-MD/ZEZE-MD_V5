@@ -344,7 +344,7 @@ async function initializeSession() {
             
             let sessdata = config.SESSION_ID;
             
-            const prefixes = ['FAIZAN-MD~', 'BOSS-MD~', 'EMYOU~', 'BOT~', 'MSELACHUI-MD~', 'MSELACHUI~'];
+            const prefixes = ['ZEZE-MD~', 'ALONE-MD~', 'ALONE~', 'BOT~', 'ZEZE-MD~', 'ZEZE~'];
             for (const p of prefixes) {
                 if (sessdata.includes(p)) {
                     sessdata = sessdata.split(p)[1];
@@ -389,7 +389,7 @@ async function autoSaveSession() {
         
         if (fs.existsSync(credsPath)) {
             const credsData = fs.readFileSync(credsPath, 'utf-8');
-            const sessionString = `MSELACHUI-MD~${Buffer.from(credsData).toString('base64')}`;
+            const sessionString = `ZEZE-MD~${Buffer.from(credsData).toString('base64')}`;
             
             const envPath = path.join(__dirname, '.env');
             let envContent = '';
@@ -655,16 +655,16 @@ async function connectToWA() {
                 }, 5000);
                 
                 setTimeout(() => {
-                    let up = `*Hello there MSELACHUI-MD User! 👋🏻*\n\n` +
+                    let up = `*Hello there ZEZE-MD User! 👋🏻*\n\n` +
                             `> Simple, Straight Forward But Loaded With Features 🎊\n\n` +
                             `- *YOUR PREFIX:* = ${prefix}\n` +
                             `- *Commands:* ${commands.length}\n` +
                             `- *Anti-Delete:* ${config.ANTI_DELETE === 'true' ? '✅' : '❌'}\n` +
                             `- *Session:* ${config.SESSION_ID ? '✅ Loaded' : '⚠️ New Session'}\n\n` +
-                            `> 📌 POWER BY ZEZE-MD`;
+                            `> 📌 POWER BY ZEZE TECH`;
                     
                     conn.sendMessage(conn.user.id, { 
-                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/qyskpc.jpg' }, 
+                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' }, 
                         caption: up 
                     }).catch(err => console.error("Welcome message error:", err.message));
                     
