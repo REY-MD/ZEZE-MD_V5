@@ -10,6 +10,19 @@
 [![Star and Fork This Repo](https://img.shields.io/static/v1?label=Star%20%26%20Fork%20This%20Repo&message=GitHub&color=181717&style=for-the-badge&logo=github&logoColor=white)](https://github.com/REY-MD/ZEZE-MD_V5/fork)  
 
 <br>
+## 🔹 DEPLOY ON OTHER PLATFORMS
+- **Render:**  
+  [![Click Here](https://img.shields.io/badge/➤Click-Here-black.svg)](https://render.com)
+
+- **ToyStack:**  
+  [![Click Here](https://img.shields.io/badge/➤Click-Here-white.svg)](https://toystack.ai)
+
+- **Koyeb:**  
+  [![Click Here](https://img.shields.io/badge/➤Click-Here-green.svg)](https://koyeb.com)
+
+- **PANEL:**
+- 
+   [![Click Here](https://img.shields.io/badge/➤Click-Here-white.svg)](https://host.talkdrove.com/auth/signup?ref=7D90F312)
 
 2.👇 Get Session ID Here for wa.connection
 [![Get Session ID Here](https://img.shields.io/static/v1?label=Session%20ID&message=Generate&color=FF4500&style=for-the-badge&logo=firefox&logoColor=orange)](https://topu-scanner.onrender.com/pair) 
@@ -25,7 +38,7 @@
 4.👇 Deploy to Heroku If your have account
 [![Deploy to Heroku](https://img.shields.io/static/v1?label=Deploy%20to&message=Heroku&color=430098&style=for-the-badge&logo=heroku&logoColor=white)](https://dashboard.heroku.com/new?template=https://github.com/REY-MD/ZEZE-MD_V5)  
 
- # Supported Versions Node Versions to run this bot
+ # Supported Versions Node Versions
 
 Please Use Node Version Higher to Get The Best Performance.
 
