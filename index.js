@@ -655,13 +655,13 @@ async function connectToWA() {
                 }, 5000);
                 
                 setTimeout(() => {
-                    let up = `*Hello there ZEZE-MD User! 👋🏻*\n\n` +
+                    let up = `*Hello there 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 User! 👋🏻*\n\n` +
                             `> Simple, Straight Forward But Loaded With Features 🎊\n\n` +
                             `- *YOUR PREFIX:* = ${prefix}\n` +
                             `- *Commands:* ${commands.length}\n` +
                             `- *Anti-Delete:* ${config.ANTI_DELETE === 'true' ? '✅' : '❌'}\n` +
                             `- *Session:* ${config.SESSION_ID ? '✅ Loaded' : '⚠️ New Session'}\n\n` +
-                            `> 📌 POWER BY ZEZE TECH`;
+                            `> 📌 POWER BY 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`;
                     
                     conn.sendMessage(conn.user.id, { 
                         image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' }, 
@@ -747,7 +747,7 @@ async function connectToWA() {
                                              `│✇ *Location:* ${isGroup ? 'Group' : 'Private'}${groupInfo}\n` +
                                              `${mediaInfo}\n` +
                                              `╰───────────────────❏\n\n` +
-                                             `> *ZEZE-MD ANTI DELETE*`;
+                                             `> *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ANTI DELETE*`;
                             
                             await conn.sendMessage(targetJid, {
                                 text: alertText,
@@ -1125,7 +1125,7 @@ async function connectToWA() {
             if (options.asSticker || /webp/.test(mime)) {
                 let { writeExif } = require('./exif.js');
                 let media = { mimetype: mime, data };
-                pathFile = await writeExif(media, { packname: config.STICKER_NAME || 'ZEZE-MD', author: config.OWNER_NAME || 'ZEZE', categories: options.categories ? options.categories : [] });
+                pathFile = await writeExif(media, { packname: config.STICKER_NAME || '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇', author: config.OWNER_NAME || '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇', categories: options.categories ? options.categories : [] });
                 await fs.promises.unlink(filename);
                 type = 'sticker';
                 mimetype = 'image/webp';
@@ -1200,7 +1200,7 @@ appExpress.get("/", (req, res) => {
     res.send(`
         <html>
             <head>
-                <title>ZEZE-MD</title>
+                <title>𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓</title>
                 <style>
                     body { font-family: Arial; text-align: center; padding: 50px; background: #f0f0f0; }
                     .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -1210,7 +1210,7 @@ appExpress.get("/", (req, res) => {
             </head>
             <body>
                 <div class="card">
-                    <h1>🤖 ZEZE-MD</h1>
+                    <h1>🤖 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓</h1>
                     <p>Status: <span class="status">✅ ONLINE</span></p>
                     <p>Commands: <strong>${commands.length}</strong></p>
                     <p>Anti-Delete: <strong>${config.ANTI_DELETE === 'true' ? '✅ ACTIVE' : '❌ INACTIVE'}</strong></p>
@@ -1282,7 +1282,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 console.log("\n🚀 ==============================");
-console.log("🚀 ZEZE-MD BOT STARTING...");
+console.log("🚀 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 BOT STARTING...");
 console.log("🚀 ==============================\n");
 
 // ==================== EXPORTS FOR PLUGINS ====================
