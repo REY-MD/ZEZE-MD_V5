@@ -1,3 +1,16 @@
+![WELLCOME](Shaban/wellcome.svg)
+  
+______
+
+[![Shaban](https://files.catbox.moe/7m53zc.jpg)](https://whatsapp.com/channel/0029Vb6aq4cCHDygiEqJZl0S)
+___ 
+  
+<p align="center">
+  <a href="https://whatsapp.com/channel/0029Vb6aq4cCHDygiEqJZl0S" target="_blank">
+    <img src="./Shaban/channel-update.svg" width="350" alt="Bot Updating — WhatsApp Channel | Join Fast">
+  </a>
+</p>
+
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Black+Ops+One&size=70&pause=500&color=008080&center=true&width=1150&height=200&lines=ZEZE-MD-SPEED-LIKE-JET" alt="Typing SVG" /></a>
 </div>
   <a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
