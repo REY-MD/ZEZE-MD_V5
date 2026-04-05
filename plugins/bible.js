@@ -48,7 +48,7 @@ cmd({
                     externalAdReply: {
                         title: "HOLY BIBLE VERSES",
                         body: "Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇",
-                        thumbnailUrl: "https://files.catbox.moe/fgiecg.jpg",
+                        thumbnailUrl: "https://files.catbox.moe/sez5vx.jpg",
                         sourceUrl: "https://github.com/",
                         mediaType: 1,
                         renderLargerThumbnail: false,
