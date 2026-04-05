@@ -57,7 +57,7 @@ ${translatedTafsirEnglish.text}`;
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: '@newsletter',
+            newsletterJid: '120363295141350550@newsletter',
             newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
             serverMessageId: 143
           }
