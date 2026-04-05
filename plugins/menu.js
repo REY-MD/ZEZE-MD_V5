@@ -1,98 +1,167 @@
 const config = require('../config')
 const { cmd, commands } = require('../command');
-const path = require('path'); 
 const os = require("os")
-const fs = require('fs');
 const {runtime} = require('../lib/functions')
 const axios = require('axios')
 
 cmd({
     pattern: "menu",
     alias: ["allmenu","fullmenu"],
-    use: '.menu',
+    use: '.menu1',
     desc: "Show all bot commands",
     category: "menu",
-    react: "🛅",
+    react: "📜",
     filename: __filename
 }, 
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         let dec = `╭━━〔 🚀 *${config.BOT_NAME}* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
-┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
-┃◈┃• 🌐 Platform : *Heroku*
-┃◈┃• 📦 Version : *5.0.2*
-┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
+┃◈┃• 👑 *Owner :* ${config.OWNER_NAME}
+┃◈┃• ⚙️ *Prefix :* [${config.PREFIX}]
+┃◈┃• 🌐 *Platform :* vercel
+┃◈┃• 📦 *Version :* 5.0.0 Pro
+┃◈┃• ⏱️ *Runtime :* ${runtime(process.uptime())}
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╭━━〔 🎙 *MAIN MENU* 〕━━┈⊷
+╭━━〔 📥 *DOWNLOAD MENU* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• 🍓 menu
-┃◈┃• 🍓 ping
-┃◈┃• 🍓 speed
-┃◈┃• 🍓 test
-┃◈┃• 🍓 alive
-┃◈┃• 🍓 runtime
-┃◈┃• 🍓 uptime
-┃◈┃• 🍓 repo
-┃◈┃• 🍓 owner
-┃◈┃• 🍓 play
-┃◈┃• 🍓 viewones
-┃◈┃• 🍓 restart
+┃◈┃• 🟦 facebook
+┃◈┃• 📁 mediafire
+┃◈┃• 🎵 tiktok
+┃◈┃• 🐦 twitter
+┃◈┃• 📷 insta
+┃◈┃• 📦 apk
+┃◈┃• 🖼️ img
+┃◈┃• ▶️ tt2
+┃◈┃• 📌 pins
+┃◈┃• 🔄 apk2
+┃◈┃• 🔵 fb2
+┃◈┃• 📍 pinterest
+┃◈┃• 🎶 spotify
+┃◈┃• 🎧 play
+┃◈┃• 🎧 play2
+┃◈┃• 🔉 audio
+┃◈┃• 🎬 video
+┃◈┃• 📹 video2
+┃◈┃• 🎵 ytmp3
+┃◈┃• 📹 ytmp4
+┃◈┃• 🎶 song
+┃◈┃• 🎬 darama
+┃◈┃• ☁️ gdrive
+┃◈┃• 🌐 ssweb
+┃◈┃• 🎵 tiks
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╭━━〔 💥 *TABLE* 〕━━┈⊷
+╭━━〔 👥 *GROUP MENU* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• ❣️ ai
-┃◈┃• ❣️ gpt
-┃◈┃• ❣️ define
-┃◈┃• ❣️ meta
-┃◈┃• ❣️ version
-┃◈┃• ❣️ news
-┃◈┃• ❣️ kiss
-┃◈┃• ❣️ hug
-┃◈┃• ❣️ kick
-┃◈┃• ❣️ bible
-┃◈┃• ❣️ quran
-┃◈┃• ❣️ channel
-┃◈┃• ❣️ antidelete
-┃◈┃• ❣️ playstore
-┃◈┃• ❣️ dawnloader
-┃◈┃• ❣️ zeze
+┃◈┃• 🔗 grouplink
+┃◈┃• 🚪 kickall
+┃◈┃• 🚷 kickall2
+┃◈┃• 🚫 kickall3
+┃◈┃• ➕ add
+┃◈┃• ➖ remove
+┃◈┃• 👢 kick
+┃◈┃• ⬆️ promote
+┃◈┃• ⬇️ demote
+┃◈┃• 🚮 dismiss
+┃◈┃• 🔄 revoke
+┃◈┃• 👋 setgoodbye
+┃◈┃• 🎉 setwelcome
+┃◈┃• 🗑️ delete
+┃◈┃• 🖼️ getpic
+┃◈┃• ℹ️ ginfo
+┃◈┃• ⏳ disappear on
+┃◈┃• ⏳ disappear off
+┃◈┃• ⏳ disappear 7D,24H
+┃◈┃• 📝 allreq
+┃◈┃• ✏️ updategname
+┃◈┃• 📝 updategdesc
+┃◈┃• 📩 joinrequests
+┃◈┃• 📨 senddm
+┃◈┃• 🏃 nikal
+┃◈┃• 🔇 mute
+┃◈┃• 🔊 unmute
+┃◈┃• 🔒 lockgc
+┃◈┃• 🔓 unlockgc
+┃◈┃• 📩 invite
+┃◈┃• #️⃣ tag
+┃◈┃• 🏷️ hidetag
+┃◈┃• @️⃣ tagall
+┃◈┃• 👔 tagadmins
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╭━━〔 🎎 *MENU* 〕━━┈⊷
+╭━━〔 🎭 *REACTIONS MENU* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• 🔴 group-leave
-┃◈┃• 🔴 group-add
-┃◈┃• 🔴 groud-acceptall
-┃◈┃• 🔴 group-info
-┃◈┃• 🔴 group-resertlink
-┃◈┃• 🔴 group-profile
-┃◈┃• 🔴 group-kick
-┃◈┃• 🔴 group-demote
-┃◈┃• 🔴 group-tag
-┃◈┃• 🔴 group-hidetag
-┃◈┃• 🔴 group-lock
-┃◈┃• 🔴 prayertime
-┃◈┃• 🔴 news
-┃◈┃• 🔴 url
-┃◈┃• 🔴 pinterest
-┃◈┃• 🔴 tictok-dl
-┃◈┃• 🔴 status-save
-┃◈┃• 🔴 anti-link
-┃◈┃• 🔴 anti-delete
-┃◈┃• 🔴 anti-bad
-┃◈┃• 🔴 block
-┃◈┃• 🔴 unblock
-┃◈┃• 🔴 hack
-┃◈┃• 🔴 ban
-┃◈┃• 🔴 happy
-┃◈┃• 🔴 shy
+┃◈┃• 👊 bully @tag
+┃◈┃• 🤗 cuddle @tag
+┃◈┃• 😢 cry @tag
+┃◈┃• 🤗 hug @tag
+┃◈┃• 🐺 awoo @tag
+┃◈┃• 💋 kiss @tag
+┃◈┃• 👅 lick @tag
+┃◈┃• 🖐️ pat @tag
+┃◈┃• 😏 smug @tag
+┃◈┃• 🔨 bonk @tag
+┃◈┃• 🚀 yeet @tag
+┃◈┃• 😊 blush @tag
+┃◈┃• 😄 smile @tag
+┃◈┃• 👋 wave @tag
+┃◈┃• ✋ highfive @tag
+┃◈┃• 🤝 handhold @tag
+┃◈┃• 🍜 nom @tag
+┃◈┃• 🦷 bite @tag
+┃◈┃• 🤗 glomp @tag
+┃◈┃• 👋 slap @tag
+┃◈┃• 💀 kill @tag
+┃◈┃• 😊 happy @tag
+┃◈┃• 😉 wink @tag
+┃◈┃• 👉 poke @tag
+┃◈┃• 💃 dance @tag
+┃◈┃• 😬 cringe @tag
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 👑 *OWNER MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 👑 owner
+┃◈┃• 📜 menu
+┃◈┃• 📜 menu2
+┃◈┃• 📊 vv
+┃◈┃• 📋 listcmd
+┃◈┃• 📚 allmenu
+┃◈┃• 📦 repo
+┃◈┃• 🚫 block
+┃◈┃• ✅ unblock
+┃◈┃• 🖼️ fullpp
+┃◈┃• 🖼️ setpp
+┃◈┃• 🔄 restart
+┃◈┃• ⏹️ shutdown
+┃◈┃• 🔄 updatecmd
+┃◈┃• 💚 alive
+┃◈┃• 🏓 ping
+┃◈┃• 🆔 gjid
+┃◈┃• 🆔 jid
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 ⚡ *MAIN MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🏓 ping
+┃◈┃• 🏓 ping2
+┃◈┃• 🚀 speed
+┃◈┃• 📡 live
+┃◈┃• 💚 alive
+┃◈┃• ⏱️ runtime
+┃◈┃• ⏳ uptime
+┃◈┃• 📦 repo
+┃◈┃• 👑 owner
+┃◈┃• 📜 menu
+┃◈┃• 📜 menu2
+┃◈┃• 🔄 restart
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
@@ -116,18 +185,16 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             },
             { quoted: mek }
         );
-// share local audio 
 
-const audioPath = path.join(__dirname, 'https://files.catbox.moe/b3u14w.mp3');
-
-if (fs.existsSync(audioPath)) {
-    await conn.sendMessage(from, {
-        audio: fs.readFileSync(audioPath),
-        mimetype: 'audio/mpeg',
-        ptt: false,
-    }, { quoted: mek });
-} else {
-    console.log("Audio file not found!");
-                        }
+        // Send audio
+        await conn.sendMessage(from, {
+            audio: { url: ' },
+            mimetype: 'audio/mp4',
+            ptt: true
+        }, { quoted: mek });
+        
+    } catch (e) {
+        console.log(e);
+        reply(`❌ Error: ${e}`);
     }
 });
