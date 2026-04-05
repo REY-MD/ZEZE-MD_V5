@@ -118,7 +118,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         );
 // share local audio 
 
-const audioPath = path.join(__dirname, 'menu.mp3');
+const audioPath = path.join(__dirname, 'https://files.catbox.moe/b3u14w.mp3');
 
 if (fs.existsSync(audioPath)) {
     await conn.sendMessage(from, {
