@@ -27,41 +27,41 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╭━━〔 ⚡ *MAIN MENU* 〕━━┈⊷
+╭━━〔 🎙 *MAIN MENU* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• 🏓 menu
-┃◈┃• 🏓 ping
-┃◈┃• 🚀 speed
-┃◈┃• 📡 test
-┃◈┃• 💚 alive
-┃◈┃• ⏱️ runtime
-┃◈┃• ⏳ uptime
-┃◈┃• 📦 repo
-┃◈┃• 👑 owner
-┃◈┃• 📜 play
-┃◈┃• 📜 viewones
-┃◈┃• 🔄 restart
+┃◈┃• 🍓 menu
+┃◈┃• 🍓 ping
+┃◈┃• 🍓 speed
+┃◈┃• 🍓 test
+┃◈┃• 🍓 alive
+┃◈┃• 🍓 runtime
+┃◈┃• 🍓 uptime
+┃◈┃• 🍓 repo
+┃◈┃• 🍓 owner
+┃◈┃• 🍓 play
+┃◈┃• 🍓 viewones
+┃◈┃• 🍓 restart
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╭━━〔 🤖 *TABLE* 〕━━┈⊷
+╭━━〔 💥 *TABLE* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• 🧠 ai
-┃◈┃• 🤖 gpt
-┃◈┃• 🤖 define
-┃◈┃• 🔵 meta
-┃◈┃• 📦 version
-┃◈┃• 💢 news
+┃◈┃• ❣️ai
+┃◈┃• ❣️ gpt
+┃◈┃• ❣️ define
+┃◈┃• ❣️ meta
+┃◈┃• ❣️ version
+┃◈┃• ❣️ news
 ┃◈┃• ❣️ kiss
-┃◈┃• 🗯 hug
-┃◈┃• 💭 kick
-┃◈┃• 👑 bible
-┃◈┃• 💫 quran
-┃◈┃• 💥 antilink
-┃◈┃• 🌍 antidelete
-┃◈┃• 🎨 
-┃◈┃• 🖼️
-┃◈┃• 🤖 
+┃◈┃• ❣️hug
+┃◈┃• ❣️ kick
+┃◈┃• ❣️ bible
+┃◈┃• ❣️quran
+┃◈┃• ❣️antilink
+┃◈┃• ❣️antidelete
+┃◈┃• ❣️ playstore
+┃◈┃• ❣️ dawnloader
+┃◈┃• ❣️url
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
