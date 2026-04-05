@@ -87,7 +87,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         );
 // share local audio 
 
-const audioPath = path.join(__dirname, '../assets/menu.m4a');
+const audioPath = path.join(__dirname, 'https://files.catbox.moe/2fq0gi.mp4');
 await conn.sendMessage(from, {
     audio: fs.readFileSync(audioPath),
     mimetype: 'audio/mp4',
