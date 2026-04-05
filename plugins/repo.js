@@ -1,35 +1,88 @@
-const axios = require("axios");
-const { cmd } = require("../command");
+const fs = require('fs');
+const path = require('path');
+const { cmd } = require('../command');
+
+// Safe fetch for all Node versions
+const fetch = (...args) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 cmd({
-  pattern: "repo",
-  desc: "Fetch information about a GitHub repository.",
-  category: "other",
-  react: "🍃",
-  filename: __filename
-}, async (conn, m, store, { from, args, reply }) => {
-  try {
-    const repoName = args.join(" ");
-    if (!repoName) {
-      return reply("❌ Please provide a GitHub repository in the format 📌 `owner/repo`.");
+    pattern: "repo",
+    alias: ["sc", "script", "info"],
+    desc: "Fetch information about bot GitHub repository",
+    react: "🩷",
+    category: "info",
+    filename: __filename
+}, async (conn, mek, m, { from, reply }) => {
+
+    const githubRepoURL = 'cool down';
+
+    try {
+        const match = githubRepoURL.match(/github\.com\/([^/]+)\/([^/]+)/);
+        if (!match) return reply("❌ Invalid GitHub repository URL");
+
+        const username = match[1];
+        const repoName = match[2];
+
+        const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+        if (!response.ok) throw new Error(`GitHub API Error: ${response.status}`);
+
+        const repoData = await response.json();
+
+        const caption = `
+╭━〔 🌐 𝐆𝐈𝐓𝐇𝐔𝐁 𝐑𝐄𝐏𝐎 𝐈𝐍𝐅𝐎 〕━⬣
+┃ 👤 User: @${m.sender.split("@")[0]}
+┃
+┃ 🤖 Bot Name   : ${repoData.name}
+┃ 👑 Owner      : ${repoData.owner.login}
+┃ ⭐ Stars      : ${repoData.stargazers_count}
+┃ 🍴 Forks      : ${repoData.forks_count}
+┃ 📝 Description:
+┃ ${repoData.description || "🚀 Advanced WhatsApp Bot • Fast • Secure • Multi-Device Supported • Packed with Premium Features & Smooth Performance"}
+┃
+┃ 🔗 Repo Link:
+┃ ${repoData.html_url}
+┃
+╰━━━━━━━━━━━━━━━━━━━━⬣
+
+> 🚀 𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐓𝐡𝐞 𝐏𝐫𝐨𝐣𝐞𝐜𝐭 ⭐  
+> 💎 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
+`;
+
+        await conn.sendMessage(from, {
+            image: { url: 'https://files.catbox.moe/sez5vx.jpg' },
+            caption,
+            contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363295141350550@newsletter',
+                    newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: mek });
+
+        // Optional voice
+        const audioPath = path.join(__dirname, '../assets/menu.m4a');
+        if (fs.existsSync(audioPath)) {
+            await conn.sendMessage(from, {
+                audio: fs.readFileSync(audioPath),
+                mimetype: 'audio/mp4',
+                ptt: false
+            }, { quoted: mek });
+        }
+
+    } catch (err) {
+        console.error("REPO ERROR:", err);
+        reply(`
+*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
+*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓⊱┈─̇─̣╌*
+*│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
+*│❌ 𝐑𝐞𝐩𝐨 𝐅𝐞𝐭𝐜𝐡 𝐅𝐚𝐢𝐥𝐞𝐝*
+*│⏳ Try again later*
+*╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
+`);
     }
-
-    const apiUrl = `https://api.github.com/repos/${repoName}`;
-    const { data } = await axios.get(apiUrl);
-
-    let responseMsg = `📁 *GitHub Repository Info* 📁\n\n`;
-    responseMsg += `📌 *Name*: ${data.name}\n`;
-    responseMsg += `🔗 *URL*: ${data.html_url}\n`;
-    responseMsg += `📝 *Description*: ${data.description || "No description"}\n`;
-    responseMsg += `⭐ *Stars*: ${data.stargazers_count}\n`;
-    responseMsg += `🍴 *Forks*: ${data.forks_count}\n`;
-    responseMsg += `👤 *Owner*: ${data.owner.login}\n`;
-    responseMsg += `📅 *Created At*: ${new Date(data.created_at).toLocaleDateString()}\n`;
-    responseMsg += `\n> *© Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*`;
-
-    await conn.sendMessage(from, { text: responseMsg }, { quoted: m });
-  } catch (error) {
-    console.error("GitHub API Error:", error);
-    reply(`❌ Error fetching repository data: ${error.response?.data?.message || error.message}`);
-  }
 });
