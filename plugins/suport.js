@@ -33,7 +33,7 @@ let dec = `
 ⟣──────────────────⟢
 ${readMore}
 \`CHANNEL🛠️\`
-https://whatsapp.com/channel/0029VaeRrcnADTOKzivM0S1r
+https://whatsapp.com/channel/0029VaeRrcnADTOKzivM0S1r?=Support
 
 \`GROUP\` 👥
 
