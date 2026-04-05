@@ -25,7 +25,7 @@ cmd({
             let fakeContact = {
                 key: {
                     fromMe: false,
-                    participant: '0@s.whatsapp.net',
+                    participant: '120363295141350550@s.whatsapp.net',
                     remoteJid: 'status@broadcast'
                 },
                 message: {
@@ -57,7 +57,7 @@ cmd({
                     forwardingScore: 999,
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
-                        newsletterJid: "@newsletter",
+                        newsletterJid: "120363295141350550@newsletter",
                         newsletterName: "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇 Bot Updates",
                         serverMessageId: "",
                     }
