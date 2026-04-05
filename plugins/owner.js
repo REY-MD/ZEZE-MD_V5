@@ -56,14 +56,15 @@ async (conn, mek, m, { from }) => {
         }, { quoted: mek });
 
         // Send audio as per your request
-        await conn.sendMessage(from, {
-            audio: { url: 'https://files.catbox.moe/6359fd.mp4' }, // Audio URL
-            mimetype: 'audio/mp4',
-            ptt: true
-        }, { quoted: mek });
+        const audioPath = path.join(__dirname, 'menu.mp3');
 
-    } catch (error) {
-        console.error(error);
-        reply(`An error occurred: ${error.message}`);
-    }
+if (fs.existsSync(audioPath)) {
+    await conn.sendMessage(from, {
+        audio: fs.readFileSync(audioPath),
+        mimetype: 'https://files.catbox.moe/b3u14w.mp3',
+        ptt: false,
+    }, { quoted: mek });
+} else {
+    console.log("Audio file not found!");
+}
 });
