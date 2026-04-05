@@ -28,7 +28,7 @@ cmd({
 
     // Fetch latest version data from GitHub
     const rawVersionUrl = 'https://raw.githubusercontent.com/REY-MD/ZEZE-MD_V5/main/data/version.json';
-    let latestVersion = 'Unknown';
+    let latestVersion = '4.01';
     let latestChangelog = 'No changelog available.';
     try {
       const { data } = await axios.get(rawVersionUrl);
