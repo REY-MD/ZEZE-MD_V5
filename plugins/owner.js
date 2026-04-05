@@ -11,7 +11,7 @@ cmd({
 async (conn, mek, m, { from }) => {
     try {
         const ownerNumber = config.OWNER_NUMBER;
-        const ownerName = config.OWNER_NAME || "ZEZE TECH_";
+        const ownerName = config.OWNER_NAME || "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇";
 
         // vCard
         const vcard = 
@@ -25,7 +25,7 @@ END:VCARD`;
         // Styled caption message
         const caption = `
 *╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ ZEZE-MD_V5 ⊱┈─̇─̣╌*
+*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌*
 *│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
 *│👑 𝐎𝐖𝐍𝐄𝐑 𝐂𝐎𝐍𝐓𝐀𝐂𝐓*
 *│*
@@ -35,7 +35,7 @@ END:VCARD`;
 *│💬 Tap contact to chat*
 *╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
 
-> ZEZE TECH
+> 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
 `;
 
         // Send styled text
