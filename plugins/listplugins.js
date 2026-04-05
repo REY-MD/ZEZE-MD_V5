@@ -67,7 +67,7 @@ cmd({
     
     if (!files.length) return reply('No plugins installed');
     
-    let msg = '📋 *KHAN-MD Installed Plugins*:\n\n';
+    let msg = '📋 *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 Installed Plugins*:\n\n';
     files.forEach((file, i) => {
       msg += `${i+1}. ${file}\n`;
     });
