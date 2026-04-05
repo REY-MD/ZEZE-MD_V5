@@ -61,7 +61,7 @@ async (conn, mek, m, { from }) => {
 if (fs.existsSync(audioPath)) {
     await conn.sendMessage(from, {
         audio: fs.readFileSync(audioPath),
-        mimetype: 'https://files.catbox.moe/b3u14w.mp3',
+        mimetype: '',
         ptt: false,
     }, { quoted: mek });
 } else {
