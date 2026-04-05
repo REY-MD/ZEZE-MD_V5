@@ -13,7 +13,7 @@ AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
 // make true if you want auto reply on status 
 AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
 // make true if you want auto reply on status 
-AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*SEEN YOUR STATUS BYZEZE TECH*",
+AUTO_STATUS_MSG: process.env.AUTO_STATUS_MSG || "*SEEN YOUR STATUS BY 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*",
 // set the auto reply massage on status reply  
 ANTI_DELETE: process.env.ANTI_DELETE || "false",
 // set true false for anti delete     
@@ -31,11 +31,11 @@ MENU_IMAGE_URL: process.env.MENU_IMAGE_URL || "https://files.catbox.moe/sez5vx.j
 // add custom menu and mention reply image url
 PREFIX: process.env.PREFIX || ".",
 // add your prifix for bot   
-BOT_NAME: process.env.BOT_NAME || "ZEZE-MD_V5",
+BOT_NAME: process.env.BOT_NAME || "𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓",
 // add bot namw here for menu
 AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
 // true to get auto status react
-STICKER_NAME: process.env.STICKER_NAME || "ZEZE TECH",
+STICKER_NAME: process.env.STICKER_NAME || "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇",
 // type sticker pack name 
 CUSTOM_REACT: process.env.CUSTOM_REACT || "true",
 // make this true for custum emoji react    
@@ -45,13 +45,13 @@ DELETE_LINKS: process.env.DELETE_LINKS || "false",
 // automatic delete links witho remove member 
 OWNER_NUMBER: process.env.OWNER_NUMBER || "255617657675",
 // add your bot owner number
-OWNER_NAME: process.env.OWNER_NAME || "ZEZE TECH",
+OWNER_NAME: process.env.OWNER_NAME || "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇",
 // add bot owner name
-DESCRIPTION: process.env.DESCRIPTION || "*©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ZEZE TECH*",
+DESCRIPTION: process.env.DESCRIPTION || "*©ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*",
 // add bot owner name    
 ALIVE_IMG: process.env.ALIVE_IMG || "https://files.catbox.moe/sez5vx.jpg",
 // add img for alive msg
-LIVE_MSG: process.env.LIVE_MSG || "> I'ᗩᗰ *ZEZE TECH*❤️‍🔥",
+LIVE_MSG: process.env.LIVE_MSG || "> I'ᗩᗰ *𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*❤️‍🔥",
 // add alive msg here 
 READ_MESSAGE: process.env.READ_MESSAGE || "false",
 // Turn true or false for automatic read msgs
