@@ -21,7 +21,7 @@ async (conn, mek, m, { from, reply }) => {
         const speed = Date.now() - m.messageTimestamp * 1000;
 
         const caption = `
-┌───〔 💻 TERMINAL STATUS // ROOT ACCESS 〕───┐
+┌───〔 💻 BEST FOR YOU // ENJOYING 〕───┐
 │
 │ 👤 USER      :: 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓
 │ ─────────────────────────────────────
@@ -33,10 +33,10 @@ async (conn, mek, m, { from, reply }) => {
 │
 ├──────────────────────────────────────
 │ 🟢 STATUS    :: ONLINE
-│ 🔐 ACCESS    :: GRANTED
+│ 🔐 ACCESS    :: RUNNING
 └───〔 ⚔️ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇  〕───┘
 
-> [ SYSTEM READY FOR COMMANDS... ]
+> [ ENJIYING SPEED BOT... ]
 `;
 
         await conn.sendMessage(from, {
