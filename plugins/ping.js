@@ -23,18 +23,18 @@ async (conn, mek, m, { from, reply }) => {
         const caption = `
 ┌───〔 💻 TERMINAL STATUS // ROOT ACCESS 〕───┐
 │
-│ 👤 USER      :: ZEZE-MD_V5
+│ 👤 USER      :: 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓
 │ ─────────────────────────────────────
 │ ⚡ SPEED     :: ${speed} ms
 │ 🧠 UPTIME    :: ${runtime(process.uptime())}
-│ 💾 RAM       :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
+│ 💾 RAM       :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}GB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}GB
 │ 🔥 CPU       :: ${os.cpus()[0].model}
 │ 📦 VERSION   :: v${config.VERSION || "5.0.0"}
 │
 ├──────────────────────────────────────
 │ 🟢 STATUS    :: ONLINE
 │ 🔐 ACCESS    :: GRANTED
-└───〔 ⚔️ ZEZE TECH CORE 〕───┘
+└───〔 ⚔️ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇  〕───┘
 
 > [ SYSTEM READY FOR COMMANDS... ]
 `;
@@ -47,14 +47,14 @@ async (conn, mek, m, { from, reply }) => {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '@newsletter',
-                    newsletterName: 'ZEZE TECH',
+                    newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
                     serverMessageId: 143
                 }
             }
         }, { quoted: mek });
 
         // 🔊 Audio
-        const audioPath = path.join(__dirname, '../assets/ping.m4a');
+        const audioPath = path.join(__dirname, 'https://files.catbox.moe/2fq0gi.mp4');
         if (fs.existsSync(audioPath)) {
             await conn.sendMessage(from, {
                 audio: fs.readFileSync(audioPath),
@@ -75,7 +75,7 @@ async (conn, mek, m, { from, reply }) => {
    Command: .ping2
 ======================= */
 cmd({
-    pattern: "ping2",
+    pattern: "ping1",
     react: "🚀",
     desc: "Quick ping check",
     category: "main",
@@ -89,7 +89,7 @@ async (conn, mek, m, { from, reply }) => {
 
         const msg = `
 *╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ ZEZE-MD_V5  ⊱┈─̇─̣╌*
+*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓  ⊱┈─̇─̣╌*
 *│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
 *│⚡ 𝐐𝐔𝐈𝐂𝐊 𝐏𝐈𝐍𝐆*
 *│*
@@ -98,7 +98,7 @@ async (conn, mek, m, { from, reply }) => {
 *│📦 𝐕𝐞𝐫𝐬𝐢𝐨𝐧:* v${config.VERSION || "5.0.0"}
 *╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
 
-> 📌 ᴘᴏᴡᴇʀ ʙʏ ZEZE TECH
+> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
 `;
 
         await conn.sendMessage(from, {
@@ -109,7 +109,7 @@ async (conn, mek, m, { from, reply }) => {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '@newsletter',
-                    newsletterName: 'ZEZE TECH',
+                    newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
                     serverMessageId: 143
                 }
             }
