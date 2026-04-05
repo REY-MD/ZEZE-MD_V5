@@ -36,7 +36,7 @@ async (conn, mek, m, { from, reply }) => {
 │ 🔐 ACCESS    :: RUNNING
 └───〔 ⚔️ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇  〕───┘
 
-> [ ENJIYING SPEED BOT... ]
+> [ ENJOYING SPEED BOT... ]
 `;
 
         await conn.sendMessage(from, {
@@ -116,7 +116,7 @@ async (conn, mek, m, { from, reply }) => {
         }, { quoted: temp });
 
     } catch (e) {
-        console.error("PING2 ERROR:", e);
+        console.error("PING1 ERROR:", e);
         reply("❌ Ping2 failed");
     }
 });
