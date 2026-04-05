@@ -21,7 +21,7 @@ async (conn, mek, m, { from, reply }) => {
         const speed = Date.now() - m.messageTimestamp * 1000;
 
         const caption = `
-┌───〔 💻 BEST FOR YOU // ENJOYING 〕───┐
+┌───〔 SPEED LIKE JET 〕───┐
 │
 │ 👤 USER      :: 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓
 │ ─────────────────────────────────────
