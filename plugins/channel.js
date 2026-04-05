@@ -24,7 +24,7 @@ async (conn, mek, m, { q, command, isCreator, reply }) => {
 
         if (!q) {
             return reply(
-                `❌ Usage:\n${command} https://whatsapp.com/channel/xxxxx/yyyy hello`
+                `❌ Usage:\n${command} https://whatsapp.com/channel/0029VaeRrcnADTOKzivM0S1r hello`
             );
         }
 
