@@ -46,22 +46,53 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
 ╭━━〔 💥 *TABLE* 〕━━┈⊷
 ┃◈╭─────────────────·๏
-┃◈┃• ❣️ai
+┃◈┃• ❣️ ai
 ┃◈┃• ❣️ gpt
 ┃◈┃• ❣️ define
 ┃◈┃• ❣️ meta
 ┃◈┃• ❣️ version
 ┃◈┃• ❣️ news
 ┃◈┃• ❣️ kiss
-┃◈┃• ❣️hug
+┃◈┃• ❣️ hug
 ┃◈┃• ❣️ kick
 ┃◈┃• ❣️ bible
-┃◈┃• ❣️quran
-┃◈┃• ❣️antilink
-┃◈┃• ❣️antidelete
+┃◈┃• ❣️ quran
+┃◈┃• ❣️ channel
+┃◈┃• ❣️ antidelete
 ┃◈┃• ❣️ playstore
 ┃◈┃• ❣️ dawnloader
-┃◈┃• ❣️url
+┃◈┃• ❣️ zeze
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 🎎 *MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🔴 group-leave
+┃◈┃• 🔴 group-add
+┃◈┃• 🔴 groud-acceptall
+┃◈┃• 🔴 group-info
+┃◈┃• 🔴 group-resertlink
+┃◈┃• 🔴 group-profile
+┃◈┃• 🔴 group-kick
+┃◈┃• 🔴 group-demote
+┃◈┃• 🔴 group-tag
+┃◈┃• 🔴 group-hidetag
+┃◈┃• 🔴 group-lock
+┃◈┃• 🔴 prayertime
+┃◈┃• 🔴 news
+┃◈┃• 🔴 url
+┃◈┃• 🔴 pinterest
+┃◈┃• 🔴 tictok-dl
+┃◈┃• 🔴 status-save
+┃◈┃• 🔴 anti-link
+┃◈┃• 🔴 anti-delete
+┃◈┃• 🔴 anti-bad
+┃◈┃• 🔴 block
+┃◈┃• 🔴 unblock
+┃◈┃• 🔴 hack
+┃◈┃• 🔴 ban
+┃◈┃• 🔴 happy
+┃◈┃• 🔴 shy
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
 
