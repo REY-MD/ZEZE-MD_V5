@@ -8,7 +8,7 @@ cmd({
     alias: ["status", "online", "a"],
     desc: "Check bot is alive or not",
     category: "main",
-    react: "🌈",
+    react: "📶",
     filename: __filename
 },
 async (conn, mek, m, { from, reply }) => {
@@ -38,7 +38,7 @@ async (conn, mek, m, { from, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '@newsletter',
+                    newsletterJid: '120363295141350550@newsletter',
                     newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
                     serverMessageId: 143
                 }
