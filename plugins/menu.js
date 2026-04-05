@@ -12,7 +12,7 @@ cmd({
     use: '.menu',
     desc: "Show all bot commands",
     category: "menu",
-    react: "📜",
+    react: "🛅",
     filename: __filename
 }, 
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -87,7 +87,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         );
 // share local audio 
 
-const audioPath = path.join(__dirname, 'https://files.catbox.moe/2fq0gi.mp4');
+const audioPath = path.join(__dirname, '');
 await conn.sendMessage(from, {
     audio: fs.readFileSync(audioPath),
     mimetype: 'audio/mp4',
