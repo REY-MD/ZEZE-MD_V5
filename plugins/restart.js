@@ -3,7 +3,7 @@ const { sleep } = require("../lib/functions");
 
 cmd({  
     pattern: "restart",  
-    desc: "Restart ZEZE-MD_V5",  
+    desc: "Restart 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓",  
     category: "owner",  
     filename: __filename  
 },  
