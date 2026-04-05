@@ -1,4 +1,3 @@
-const config = require('../config');
 const { cmd } = require('../command');
 
 const stylizedChars = {
@@ -16,43 +15,54 @@ cmd({
     react: "🔤",
     desc: "React to channel messages with stylized text",
     category: "owner",
-    use: '.chr <channel-link> <text>',
+    use: ".chr <channel-link> <text>",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isCreator, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { q, command, isCreator, reply }) => {
     try {
         if (!isCreator) return reply("❌ Owner only command");
-        if (!q) return reply(`Usage:\n${command} https://whatsapp.com/channel/0029VaeRrcnADTOKzivM0S1r hello`);
+
+        if (!q) {
+            return reply(
+                `❌ Usage:\n${command} https://whatsapp.com/channel/xxxxx/yyyy hello`
+            );
+        }
 
         const [link, ...textParts] = q.split(' ');
-        if (!link.includes("whatsapp.com/channel/")) return reply("Invalid channel link format");
-        
+        if (!link.includes("https://whatsapp.com/channel/0029VaeRrcnADTOKzivM0S1r")) {
+            return reply("❌ Invalid channel link");
+        }
+
         const inputText = textParts.join(' ').toLowerCase();
-        if (!inputText) return reply("Please provide text to convert");
+        if (!inputText) return reply("❌ Text missing");
 
         const emoji = inputText
             .split('')
-            .map(char => {
-                if (char === ' ') return '―';
-                return stylizedChars[char] || char;
-            })
+            .map(c => c === ' ' ? '―' : stylizedChars[c] || c)
             .join('');
 
         const channelId = link.split('/')[4];
         const messageId = link.split('/')[5];
-        if (!channelId || !messageId) return reply("Invalid link - missing IDs");
+        if (!channelId || !messageId) {
+            return reply("❌ Invalid channel message link");
+        }
 
         const channelMeta = await conn.newsletterMetadata("invite", channelId);
         await conn.newsletterReactMessage(channelMeta.id, messageId, emoji);
 
-        return reply(`╭━━━〔 *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓* 〕━━━┈⊷
-┃▸ *Success!* Reaction sent
-┃▸ *Channel:* ${channelMeta.name}
-┃▸ *Reaction:* ${emoji}
-╰────────────────┈⊷
-> *© Pᴏᴡᴇʀᴇᴅ Bʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*`);
+        return reply(`
+╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
+│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
+│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
+│❀ ✅ Reaction Sent Successfully
+│❀ 📢 Channel: ${channelMeta.name}
+│❀ 🔤 Reaction: ${emoji}
+╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
+
+> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
+`);
     } catch (e) {
         console.error(e);
-        reply(`❎ Error: ${e.message || "Failed to send reaction"}`);
+        reply("❌ Reaction failed, try again later");
     }
 });
