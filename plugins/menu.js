@@ -118,15 +118,16 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         );
 // share local audio 
 
-const audioPath = path.join(__dirname, '');
-await conn.sendMessage(from, {
-    audio: fs.readFileSync(audioPath),
-    mimetype: 'audio/mp4',
-    ptt: false,
-}, { quoted: mek });
-        
-    } catch (e) {
-        console.log(e);
-        reply(`❌ Error: ${e}`);
+const audioPath = path.join(__dirname, 'menu.mp3');
+
+if (fs.existsSync(audioPath)) {
+    await conn.sendMessage(from, {
+        audio: fs.readFileSync(audioPath),
+        mimetype: 'audio/mpeg',
+        ptt: false,
+    }, { quoted: mek });
+} else {
+    console.log("Audio file not found!");
+                        }
     }
 });
