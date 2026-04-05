@@ -53,7 +53,7 @@ cmd({
     const lastUpdate = fs.statSync(localVersionPath).mtime.toLocaleString();
 
     // GitHub stats
-    const githubRepo = 'https://github.com/REY-MD/ZEZE-MD_V5';
+    const githubRepo = 'keep kindly';
 
     // Check update status
     let updateMessage = `*✅ ʏᴏᴜʀ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ʙᴏᴛ ɪs ᴜᴘ-ᴛᴏ-ᴅᴀᴛᴇ!*`;
