@@ -28,7 +28,7 @@ async (conn, mek, m, { from, q, reply }) => {
         const time = new Date().toLocaleString("en-GB", { timeZone: "Africa/Kampala" });
 
         const wordInfo = `
-╭─────❏ *📖 ZEZE-MD_V5* ❏─────╮
+╭─────❏ *📖 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓* ❏─────╮
 │─❏ 🕒 *Time*: ${time}
 │─❏ 🔤 *Word*: ${definitionData.word}
 │─❏ 🗣 *Pronunciation*: ${phonetics}
@@ -37,7 +37,7 @@ async (conn, mek, m, { from, q, reply }) => {
 │─❏ ✍️ *Example*: ${example}
 │─❏ 📝 *Synonyms*: ${synonyms}
 ╰───────❏
-🔗 _ᴘᴏᴡᴇʀᴇᴅ ʙʏ ZEZE TECH_
+🔗 _ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
         `.trim();
 
         // Send pronunciation audio if available
