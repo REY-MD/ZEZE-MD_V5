@@ -16,7 +16,7 @@
     "STICKER_NAME": {
       "description": "type your sticker pack name.",
       "required": false,
-      "value": "ZEZE TECH"
+      "value": "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇"
     }, 
       
     "PREFIX": {
@@ -78,14 +78,14 @@
     "AUTO_STATUS_MSG": {
       "description": "Type custom message on status reply",
       "required": true,
-      "value": "*SEEN YOUR STATUS BY ZEZE-MD🪕*"
+      "value": "*SEEN YOUR STATUS BY 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇🪕*"
    
      }, 
     
     "OWNER_NAME": {
       "description": "Type Bot Owner Name.",
       "required": false,
-      "value": "*ZEZE-TECH*"
+      "value": "*𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*"
 }, 
 
     "OWNER_NUMBER": {
@@ -98,7 +98,7 @@
     "BOT_NAME": {
       "description": "Type here the bot name.",
       "required": false,
-      "value": "ZEZE-MD_V5"
+      "value": "𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓"
 
       }, 
 
@@ -137,7 +137,7 @@
      "DESCRIPTION": {
       "description": "add caption for menu and other",
       "required": false,
-      "value": "*📌 ZEZE-MD_V5*"
+      "value": "*📌 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓*"
     },
 
       "DELETE_LINKS": {
