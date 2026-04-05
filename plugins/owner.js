@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const config = require('../config');
 
 cmd({
-    pattern: "owner",
+    pattern: "zeze",
     react: "👑", 
     desc: "Get bot owner contact",
     category: "main",
