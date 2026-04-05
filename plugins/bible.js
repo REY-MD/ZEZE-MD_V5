@@ -30,8 +30,8 @@ cmd({
                 },
                 message: {
                     contactMessage: {
-                        displayName: 'ZEZE TECH ✅',
-                        vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:ZEZE TECH ✅\nORG:ZEZE TECH;\nTEL;type=CELL;type=VOICE;waid=254700000000:+254 700 000000\nEND:VCARD`,
+                        displayName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇 ✅',
+                        vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇 ✅\nORG:𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇;\nTEL;type=CELL;type=VOICE;waid=254700000000:+254 700 000000\nEND:VCARD`,
                         jpegThumbnail: null
                     }
                 }
@@ -43,11 +43,11 @@ cmd({
                     `📖 *Reference:* ${ref}\n` +
                     `📚 *Text:* ${text}\n\n` +
                     `🗂️ *Translation:* ${translation_name}\n\n` +
-                    `© PK XMD BIBLE`,
+                    `© 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 BIBLE`,
                 contextInfo: {
                     externalAdReply: {
                         title: "HOLY BIBLE VERSES",
-                        body: "Powered by ZEZE TECH",
+                        body: "Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇",
                         thumbnailUrl: "https://files.catbox.moe/fgiecg.jpg",
                         sourceUrl: "https://github.com/",
                         mediaType: 1,
@@ -58,7 +58,7 @@ cmd({
                     isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: "@newsletter",
-                        newsletterName: "ZEZE TECH Bot Updates",
+                        newsletterName: "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇 Bot Updates",
                         serverMessageId: "",
                     }
                 }
