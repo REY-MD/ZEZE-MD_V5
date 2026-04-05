@@ -29,22 +29,26 @@ async (conn, mek, m, { from }) => {
 
         // Send the owner contact message with image and audio
         await conn.sendMessage(from, {
-            image: { url: 'jpg' }, // Image URL from your request
+            image: { url: 'https://files.catbox.moe/sez5vx.jpg' }, // Image URL from your request
             caption: `╭━━〔 *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓* 〕━━┈⊷
 ┃◈╭─────────────·๏
-┃◈┃• *Here is the owner details*
-┃◈┃• *Name* - ${ownerName}
-┃◈┃• *Number* ${ownerNumber}
-┃◈┃• *Version*: 2.0.0 Beta
+┃◈┃° *Here is the owner details*
+┃◈┃° *Name* - ${ownerName}
+┃◈┃° *Number* ${ownerNumber}
+┃◈┃° *Version*: 5.0.0 Bet
+┃◈┃° *Inst:humphreymbise255
+┃◈┃° *Fb:Humphrey Mbise
+┃◈┃° *Tic:humphreymbise47
+┃◈┃° *Thread:humphreymbise47
 ┃◈└───────────┈⊷
 ╰──────────────┈⊷
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴄʀɪss ᴠᴇᴠᴏ`, // Display the owner's details
+> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`, // Display the owner's details
             contextInfo: {
                 mentionedJid: [`${ownerNumber.replace('+', '')}@s.whatsapp.net`], 
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '@newsletter',
+                    newsletterJid: '120363295141350550@newsletter',
                     newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
                     serverMessageId: 143
                 }            
