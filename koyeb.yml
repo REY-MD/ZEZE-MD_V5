@@ -1,6 +1,6 @@
-name: 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃
+name: 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓
 services:
-  - name: 𝚳𝐒𝚵𝐋𝚫-𝐂𝚮𝐔𝚰-𝚾𝚳𝐃-service
+  - name: 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓-service
     type: web
     ports:
       - 5000
