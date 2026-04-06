@@ -35,7 +35,7 @@ cmd({
         // Send result
         await client.sendMessage(from, {
             image: imageBuffer,
-            caption: "> ᗩᗪᗴᗴᒪ-᙭ᗰᗪ",
+            caption: "> 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓",
             mimetype: 'image/png'
         }, { quoted: message });
 
