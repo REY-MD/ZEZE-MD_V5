@@ -14,7 +14,7 @@ cmd({
 
   if (!q) return reply("❌ *Which song should I fetch?* Please provide a song name or keywords.");
 
-  reply("🎶 *Sɪʟᴠᴀ Sᴘᴀʀᴋ ɪs ᴘʀᴏᴄᴇssɪɴɢ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ...*\n🔍 Searching for your track...");
+  reply("🎶 *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ɪs ᴘʀᴏᴄᴇssɪɴɢ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ...*\n🔍 Searching for your track...");
 
   try {
     const search = await ytSearch(q);
