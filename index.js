@@ -344,7 +344,7 @@ async function initializeSession() {
             
             let sessdata = config.SESSION_ID;
             
-            const prefixes = ['ZEZE-MD~', 'BOSS-MD~', 'ZEZE~', 'BOT~', 'ZEZE-MD~', 'ZEZE~'];
+            const prefixes = ['FAIZAN-MD~', 'BOSS-MD~', 'EMYOU~', 'BOT~', 'ZEZE-MD~', 'ZEZE~'];
             for (const p of prefixes) {
                 if (sessdata.includes(p)) {
                     sessdata = sessdata.split(p)[1];
@@ -389,7 +389,7 @@ async function autoSaveSession() {
         
         if (fs.existsSync(credsPath)) {
             const credsData = fs.readFileSync(credsPath, 'utf-8');
-            const sessionString = `ZEZE-MD~${Buffer.from(credsData).toString('base64')}`;
+            const sessionString = `MSELACHUI-MD~${Buffer.from(credsData).toString('base64')}`;
             
             const envPath = path.join(__dirname, '.env');
             let envContent = '';
@@ -655,13 +655,13 @@ async function connectToWA() {
                 }, 5000);
                 
                 setTimeout(() => {
-                    let up = `*Hello there 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 User! 👋🏻*\n\n` +
+                    let up = `*Hello there MSELACHUI-MD User! 👋🏻*\n\n` +
                             `> Simple, Straight Forward But Loaded With Features 🎊\n\n` +
                             `- *YOUR PREFIX:* = ${prefix}\n` +
                             `- *Commands:* ${commands.length}\n` +
                             `- *Anti-Delete:* ${config.ANTI_DELETE === 'true' ? '✅' : '❌'}\n` +
                             `- *Session:* ${config.SESSION_ID ? '✅ Loaded' : '⚠️ New Session'}\n\n` +
-                            `> 📌 POWER BY 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`;
+                            `> 📌 POWER BY ZEZE-MD`;
                     
                     conn.sendMessage(conn.user.id, { 
                         image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' }, 
@@ -672,7 +672,7 @@ async function connectToWA() {
                     const credsPath = path.join(sessionDir, 'creds.json');
                     if (fs.existsSync(credsPath)) {
                         const creds = fs.readFileSync(credsPath, 'utf-8');
-                        const sessionString = `MSELACHUI-MD~${Buffer.from(creds).toString('base64')}`;
+                        const sessionString = `ZEZE-MD~${Buffer.from(creds).toString('base64')}`;
                         
                         conn.sendMessage(ownerNumber[0] + '@s.whatsapp.net', {
                             text: `✅ *BOT ACTIVATED*\n\nBot is online!\nCommands: ${commands.length}\nPrefix: ${prefix}\nAnti-Delete: ${config.ANTI_DELETE === 'true' ? '✅ ACTIVE' : '❌ INACTIVE'}\n\n*📱 SESSION ID (SAVE THIS):*\n\`\`\`${sessionString.substring(0, 100)}...\`\`\``
@@ -747,7 +747,7 @@ async function connectToWA() {
                                              `│✇ *Location:* ${isGroup ? 'Group' : 'Private'}${groupInfo}\n` +
                                              `${mediaInfo}\n` +
                                              `╰───────────────────❏\n\n` +
-                                             `> *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ANTI DELETE*`;
+                                             `> *ZEZE-MD ANTI DELETE*`;
                             
                             await conn.sendMessage(targetJid, {
                                 text: alertText,
@@ -1125,7 +1125,7 @@ async function connectToWA() {
             if (options.asSticker || /webp/.test(mime)) {
                 let { writeExif } = require('./exif.js');
                 let media = { mimetype: mime, data };
-                pathFile = await writeExif(media, { packname: config.STICKER_NAME || '𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓', author: config.OWNER_NAME || '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇', categories: options.categories ? options.categories : [] });
+                pathFile = await writeExif(media, { packname: config.STICKER_NAME || 'MSELACHUI-MD', author: config.OWNER_NAME || 'MSELACHUI', categories: options.categories ? options.categories : [] });
                 await fs.promises.unlink(filename);
                 type = 'sticker';
                 mimetype = 'image/webp';
@@ -1200,7 +1200,7 @@ appExpress.get("/", (req, res) => {
     res.send(`
         <html>
             <head>
-                <title>𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓</title>
+                <title>ZEZE-MD</title>
                 <style>
                     body { font-family: Arial; text-align: center; padding: 50px; background: #f0f0f0; }
                     .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -1210,11 +1210,11 @@ appExpress.get("/", (req, res) => {
             </head>
             <body>
                 <div class="card">
-                    <h1>🤖 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓</h1>
+                    <h1>🤖 ZEZE-MD</h1>
                     <p>Status: <span class="status">✅ ONLINE</span></p>
                     <p>Commands: <strong>${commands.length}</strong></p>
                     <p>Anti-Delete: <strong>${config.ANTI_DELETE === 'true' ? '✅ ACTIVE' : '❌ INACTIVE'}</strong></p>
-                    <p>Memory: <span class="memory">${(mem.heapUsed / 1024 / 1024).toFixed(1)} GB</span></p>
+                    <p>Memory: <span class="memory">${(mem.heapUsed / 1024 / 1024).toFixed(1)} MB</span></p>
                     <p>Uptime: ${Math.floor(process.uptime())} seconds</p>
                     <p>Owner: ${config.OWNER_NAME} (${config.OWNER_NUMBER})</p>
                 </div>
@@ -1282,7 +1282,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 console.log("\n🚀 ==============================");
-console.log("🚀 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 BOT STARTING...");
+console.log("🚀 ZEZE-MD BOT STARTING...");
 console.log("🚀 ==============================\n");
 
 // ==================== EXPORTS FOR PLUGINS ====================
