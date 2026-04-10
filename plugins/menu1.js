@@ -1,432 +1,662 @@
+const fs = require('fs');
 const config = require('../config');
 const { cmd, commands } = require('../command');
-const os = require("os");
 const { runtime } = require('../lib/functions');
 const axios = require('axios');
-const pkg = require('../package.json'); // Get version from package.json
 
-// Visual Elements
-const rainbow = ['💥', '💥'];
-const emojis = ['✨', '⚡', '🌟', '💫', '🎀', '🧿', '💠', '🔮', '🌈'];
+cmd({
+    pattern: "menu4",
+    desc: "Show interactive menu system",
+    category: "menu",
+    react: "⚡",
+    filename: __filename
+}, async (conn, mek, m, { from, reply }) => {
+    try {
+        // Count total commands
+        const totalCommands = Object.keys(commands).length;
+        
+        // Your existing menu caption
+        const menuCaption = `╭━━ ⌜  *${config.BOT_NAME}* ⌟ ━━⊷❍
+┃ 👤 ʙᴏᴛ ᴏᴡɴᴇʀ: *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓*
+┃ 🌍 ᴍᴏᴅᴇ: *ᴘᴜʙʟɪᴄ*
+┃ 🔤 ᴘʀᴇғɪx: [ . ]
+╰━━━━━━━━━━━━━━━━━━━⊷❍
+╭─「 *𝚘𝚠𝚗𝚎𝚛* 」
+│ *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓*
+╰───────────────⊷
 
-const randomEmoji = () => emojis.sort(() => 0.5 - Math.random()).slice(0, 3).join('');
-const divider = (length = 20, char = '─') => char.repeat(length);
+📜 *ᴄʜᴏɪᴄᴇ ᴄᴏᴍᴍᴀɴᴅ* 
+╭─「 *TOOᒪ IᑎᖴO* 」
+│ .*𝚖𝚎𝚗𝚞*
+│ .*𝚖𝚎𝚗𝚞2*
+│ .*𝚊𝚕𝚕𝚖𝚎𝚗𝚞*
+│ .*𝚕𝚒𝚜𝚝𝚖𝚎𝚗𝚞*
+╰───────────────⊷
+╭─「 *ᗪOᗯᑎᒪOᗩᗪ ᗰᗴᑎᑌ* 」
+│ .*𝚏𝚊𝚌𝚋𝚘𝚘𝚕 (𝚞𝚛𝚕)*
+│ .*𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 (𝚞𝚛𝚕)*
+│ .*𝚖𝚎𝚍𝚒𝚊𝚏𝚒𝚛𝚎 (𝚞𝚛𝚕)*
+│ .*𝚝𝚒𝚔𝚝𝚘𝚔 (𝚞𝚛𝚕)*
+│ .*𝚝𝚠𝚒𝚝𝚝𝚎𝚛 (𝚞𝚛𝚕)*
+│ .*𝚒𝚗𝚝𝚊 (𝚞𝚛𝚕)*
+│ .*𝚊𝚙𝚔 (𝚊𝚙𝚙)*
+│ .*𝚒𝚖𝚐 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚝𝚝2 (𝚞𝚛𝚕)*
+│ .*𝚙𝚒𝚗𝚜 (𝚞𝚛𝚕)*
+│ .*𝚙𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝 (𝚞𝚛𝚕)*
+│ .*𝚊𝚙𝚔2 (𝚊𝚙𝚙)*
+│ .*𝚜𝚙𝚘𝚝𝚒𝚏𝚢 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚙𝚕𝚊𝚢 (𝚜𝚘𝚗𝚐)*
+│ .*𝚙𝚕𝚊𝚢2-10 (𝚞𝚛𝚕)*
+│ .*𝚊𝚞𝚍𝚒𝚘 (𝚞𝚛𝚕)*
+│ .*𝚟𝚒𝚍𝚎𝚘 (𝚞𝚛𝚕)*
+│ .*𝚟𝚒𝚍𝚎𝚘2-10 (𝚞𝚛𝚕)*
+│ .*𝚢𝚝𝚖𝚙3 (𝚞𝚛𝚕)*
+│ .*𝚢𝚝𝚖𝚙4 (𝚞𝚛𝚕)*
+│ .*𝚜𝚒𝚗𝚐 (𝚗𝚊𝚖𝚎)*
+│ .*𝚍𝚊𝚛𝚊𝚖𝚊 (𝚗𝚊𝚖𝚎)*
+╰──────────────⊷
+╭─「 *TOOᒪ IᑎᖴO* 」
+│ .*𝚐𝚓𝚒𝚍*
+│ .*𝚓𝚒𝚍*
+╰───────────────⊷
+╭─「 *ᗷOT IᑎᖴO* 」
+│ .*𝚙𝚒𝚗𝚐*
+│ .*𝚊𝚕𝚒𝚟𝚎*
+│ .*𝚕𝚒𝚟𝚎*
+│ .*𝚘𝚠𝚗𝚎𝚛*
+│ .*𝚛𝚞𝚗𝚝𝚒𝚖𝚎*
+│ .*𝚞𝚙𝚝𝚒𝚖𝚎*
+│ .*𝚛𝚎𝚙𝚘*
+│ .*𝚘𝚠𝚗𝚎𝚛*
+╰───────────────⊷
+╭─「 *ᘜᖇOᑌᑭ ᑕOᗰᗰᗩᑎᗪ* 」
+│ .*𝚐𝚛𝚘𝚞𝚙𝚕𝚒𝚗𝚔*
+│ .*𝚔𝚒𝚌𝚔𝚊𝚕𝚕*
+│ .*𝚔𝚒𝚌𝚔𝚊𝚕𝚕2*
+│ .*𝚔𝚒𝚌𝚔𝚊𝚕𝚕3*
+│ .𝚊𝚍𝚍 +92××*
+│ .*𝚁𝚎𝚖𝚘𝚟𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚔𝚒𝚌𝚔 @𝚞𝚜𝚎𝚛*
+│ .*𝚙𝚎𝚘𝚖𝚘𝚝𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚍𝚎𝚖𝚘𝚝𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚍𝚒𝚜𝚖𝚒𝚜𝚜*
+│ .*𝚛𝚎𝚟𝚘𝚔𝚎*
+│ .*𝚖𝚞𝚝𝚎 (𝚝𝚒𝚖𝚎)*
+│ .*𝚞𝚗𝚖𝚞𝚝𝚎*
+│ .*𝚕𝚘𝚌𝚔𝚐𝚌*
+│ .*𝚞𝚗𝚕𝚘𝚌𝚔𝚐𝚌*
+│ .*𝚝𝚊𝚐 @𝚞𝚜𝚎𝚛*
+│ .*𝚑𝚒𝚍𝚎𝚝𝚊𝚐 (𝚖𝚜𝚐)*
+│ .*𝚝𝚊𝚐𝚊𝚕𝚕*
+│ .*𝚝𝚊𝚐𝚊𝚍𝚖𝚒*
+│ .*𝚒𝚗𝚟𝚒𝚝𝚎*
+╰───────────────⊷
+╭─「 *SEARCH* 」
+│ .*𝚍𝚎𝚏𝚒𝚗𝚎 (𝚠𝚘𝚛𝚍)*
+│ .*𝚗𝚎𝚠𝚜 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚖𝚘𝚟𝚒𝚎 (𝚗𝚊𝚖𝚎)*
+│ .*𝚠𝚎𝚊𝚝𝚑𝚎𝚛 (𝚕𝚘𝚌)*
+╰───────────────⊷
+╭─「 *ᗩI ᖴᖇᗴᗴ* 」
+│ .*𝚊𝚒*
+│ .*𝚌𝚑𝚊𝚝𝚊𝚒*
+│ .*𝚐𝚙𝚝*
+│ .*𝚐𝚙𝚝2
+│ .*𝚐𝚙𝚝3*
+│ .*𝚐𝚙𝚝𝚖𝚒𝚗𝚒*
+│ .*𝚖𝚎𝚝𝚎*
+╰───────────────⊷
+╭─「 *ᖴᑌᑎᑎY* 」
+│ .*𝚋𝚞𝚕𝚕𝚢 @𝚞𝚜𝚎𝚛*
+│ .*𝚋𝚘𝚗𝚔 @𝚞𝚜𝚎𝚛*
+│ .*𝚢𝚎𝚎𝚝 @𝚞𝚜𝚎𝚛*
+│ .*𝚜𝚕𝚊𝚙 @𝚞𝚜𝚎𝚛*
+│ .*𝚔𝚒𝚕𝚕 @𝚞𝚜𝚎𝚛*
+╰───────────────⊷
+╭─「 *ᗩᖴᖴᗴᑕTIOᑎ* 」
+│ .*𝚌𝚞𝚍𝚍𝚕𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚑𝚞𝚐 @𝚞𝚜𝚎𝚛*
+│ .*𝚔𝚒𝚜𝚜 @𝚞𝚜𝚎𝚛*
+│ .*𝚔𝚒𝚌𝚔 @𝚞𝚜𝚎𝚛*
+│ .*𝚙𝚊𝚝 @𝚞𝚜𝚎𝚛*
+╰───────────────⊷
+╭─「 *ᗴ᙭ᑭᖇᗴՏՏIOᑎՏ* 」
+│ .*𝚋𝚕𝚞𝚜𝚑 @𝚞𝚜𝚎𝚛*
+│ .*𝚜𝚖𝚒𝚕𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚑𝚊𝚙𝚙𝚢 @𝚞𝚜𝚎𝚛*
+│ .*𝚠𝚒𝚗𝚔 @𝚞𝚜𝚎𝚛*
+│ .*𝚙𝚘𝚔𝚎 @𝚞𝚜𝚎𝚛*
+╰───────────────⊷
+╭─「 *ᖇᗴᑎᗪOᗰ* 」
+│ .*𝚏𝚕𝚒𝚙*
+│ .*𝚌𝚘𝚒𝚗𝚏𝚕𝚒𝚙*
+│ .*𝚛𝚌𝚘𝚕𝚘𝚛*
+│ .*𝚛𝚘𝚕𝚕*
+│ .*𝚏𝚊𝚌𝚝*
+╰───────────────⊷
+╭─「 *OTᕼᗴᖇ ᗰᗴᑎᑌ* 」
+│ .*𝚝𝚒𝚖𝚎𝚗𝚘𝚠*
+│ .*𝚍𝚊𝚝𝚎*
+│ .*𝚌𝚘𝚞𝚗𝚝 (𝚗𝚞𝚖)*
+│ .*𝚌𝚊𝚕𝚌𝚞𝚕𝚊𝚝𝚎 (𝚎𝚡𝚙𝚛)*
+│ .*𝚌𝚘𝚞𝚗𝚝𝚡*
+╰───────────────⊷
+╭─「 *Tᗴ᙭T TOOᒪ* 」
+│ .*𝚏𝚊𝚗𝚌𝚢 (𝚝𝚎𝚡𝚝)*
+│ .*𝚝𝚝𝚜 (𝚝𝚎𝚡𝚝)*
+│ .*𝚝𝚛𝚝 (𝚝𝚎𝚡𝚝)*
+│ .*𝚋𝚊𝚜𝚎64 (𝚝𝚎𝚡𝚝)*
+│ .*𝚞𝚗𝚋𝚊𝚜𝚎64 (𝚝𝚎𝚡𝚝)*
+╰───────────────⊷
+╭─「 *ᑕOᑎᐯᗴᖇT ᗰᗴᑎᑌ* 」
+│ .*𝚖𝚎𝚍𝚒𝚊 𝚌𝚘𝚗𝚟𝚎𝚛𝚜𝚒𝚘𝚗*
+│ .*𝚜𝚝𝚒𝚌𝚔𝚎𝚛 (𝚒𝚖𝚐)*
+│ .*𝚜𝚝𝚒𝚌𝚔𝚎𝚛2 (𝚒𝚖𝚐)*
+│ .*𝚎𝚖𝚘𝚓𝚒𝚖𝚒𝚡 🥰+🥵*
+│ .*𝚝𝚊𝚔𝚎 (𝚗𝚊𝚖𝚎,𝚝𝚎𝚡𝚝)*
+│ .*𝚝𝚘𝚖𝚙3 (𝚟𝚒𝚍𝚎𝚘)*
+╰───────────────⊷
+╭─「 *ᑕᕼᗩᖇᗩᑕTᗴᖇՏ ᗰᗴᑎᑌ* 」
+│ .*𝚊𝚗𝚒𝚖𝚎𝚐𝚒𝚛𝚕*
+│ .*𝚊𝚗𝚒𝚖𝚎𝚐𝚒𝚛𝚕𝚕-5*
+│ .*𝚊𝚗𝚒𝚖𝚎-5*
+│ .*𝚏𝚘𝚡𝚐𝚒𝚛𝚕*
+│ .*𝚗𝚊𝚛𝚞𝚝𝚘*
+╰───────────────⊷
+╭─「 *ᗩᑎIᗰᗴ ᗰᗴᑎᑌ* 」
+│ .*𝚒𝚖𝚊𝚐𝚎𝚜*
+│ .*𝚏𝚊𝚌𝚔*
+│ .*𝚍𝚘𝚐*
+│ .*𝚊𝚠𝚘𝚘*
+│ .*𝚐𝚊𝚛𝚕*
+│ .*𝚠𝚊𝚒𝚏𝚞*
+│ .*𝚗𝚎𝚔𝚘*
+│ .*𝚖𝚎𝚐𝚗𝚞𝚖𝚒𝚗*
+│ .*𝚖𝚊𝚒𝚍*
+│ .*𝚊𝚗𝚒𝚖𝚎𝚐𝚒𝚛𝚕*
+│ .*𝚕𝚘𝚕𝚘*
+╰───────────────⊷
+╭─「 *Iᗰᘜ ᗰᗴᑎᑌ* 」
+│ .*𝚒𝚖𝚊𝚐𝚎*
+│ .*𝚒𝚖𝚊𝚐𝚒𝚗𝚎1 (𝚝𝚎𝚡𝚝)*
+│ .*𝚒𝚖𝚊𝚐𝚒𝚗𝚎2 (𝚝𝚎𝚡𝚝)*
+╰───────────────⊷
+╭─「 *ՏᑭᗴᑕIᗩᒪIᘔᗴᗪ* 」
+│ .*𝚋𝚕𝚊𝚌𝚔𝚋𝚘𝚡 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚕𝚞𝚖𝚊 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚍𝚓 (𝚚𝚞𝚎𝚛𝚢)*
+│ .*𝚊𝚍𝚎𝚎𝚕 (𝚚𝚞𝚎𝚛𝚢)*
+╰───────────────⊷
+╭─「 *ᑌՏᗴᖇ ᗰᗴᑎᑌ* 」
+│ .*𝚛𝚎𝚜𝚝𝚛𝚒𝚌𝚝𝚎𝚍 𝚌𝚘𝚖𝚖𝚊𝚗𝚍𝚜*
+│ .*𝚋𝚕𝚘𝚌𝚔*
+│ .*𝚞𝚗𝚋𝚕𝚘𝚌𝚔*
+│ .*𝚏𝚞𝚕𝚕𝚙𝚙*
+│ .*𝚜𝚎𝚝𝚙𝚙*
+│ .*𝚛𝚎𝚜𝚝𝚊𝚛𝚝*
+│ .*𝚜𝚑𝚞𝚝𝚍𝚘𝚠𝚗*
+│ .*𝚞𝚗𝚍𝚊𝚝𝚎𝚌𝚖𝚍*
+╰───────────────⊷
+╭─「 *ᖇᗴᗩᑕT ᗰᗴᑎᑌ* 」
+│ .*𝚕𝚘𝚟𝚎*
+│ .*𝚑𝚊𝚙𝚙𝚢*
+│ .*𝚜𝚊𝚍*
+│ .*𝚑𝚘𝚝*
+│ .*𝚑𝚎𝚊𝚛𝚝*
+│ .*𝚜𝚑𝚢*
+│ .*𝚋𝚎𝚊𝚞𝚝𝚒𝚏𝚞𝚕*
+│ .*𝚌𝚞𝚗𝚏𝚞𝚜𝚎𝚍*
+│ .*𝚖𝚘𝚗*
+│ .*𝚔𝚒𝚜𝚜*
+│ .*𝚋𝚛𝚘𝚔𝚎*
+│ .*𝚑𝚞𝚛𝚝*
+╰───────────────⊷
+╭─「 *IᑎTᗴᖇᗩᑕTIᐯᗴ ᗰᗴᑎᑌ* 」
+│ .*𝚜𝚑𝚊𝚙𝚎𝚛*
+│ .*𝚛𝚊𝚝𝚎 @𝚞𝚜𝚎𝚛*
+│ .*𝚒𝚗𝚜𝚞𝚕𝚝 @𝚞𝚜𝚎𝚛*
+│ .*𝚑𝚊𝚌𝚔 @𝚞𝚜𝚎𝚛*
+│ .*𝚜𝚑𝚒𝚙 @𝚞𝚜𝚎𝚛1 @𝚞𝚜𝚎𝚛2*
+│ .*𝚌𝚑𝚊𝚛𝚊𝚌𝚝𝚎𝚛*
+│ .*𝚙𝚒𝚌𝚔𝚞𝚙*
+│ .*𝚓𝚘𝚔𝚎*
+╰───────────────⊷
+╭─「 *ᑭᗩKᗩᘜᗴ* 」
+│ .*𝚗𝚙𝚖*
+╰───────────────⊷
+╭─「 *ᑌᑭᗪᗩTᗴ* 」
+│ .*𝚞𝚙𝚍𝚊𝚝𝚎*
+│ .*𝚛𝚎𝚜𝚝𝚊𝚛𝚝*
+╰───────────────⊷
+╭─「 *KIᑎᘜ🔥* 」
+|  .*𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*
+╰───────────────⊷
+> ${config.DESCRIPTION}`;
 
-// 🔁 Animated Video + Audio Sender
-async function sendMenu(conn, from, mek, sender, text, title, sendAudio = false) {
-  try {
-    await conn.sendMessage(from, {
-      video: { url: 'https://files.catbox.moe/sez5vx.jpg' },
-      caption: text,
-      gifPlayback: true,
-      contextInfo: {
-        mentionedJid: [sender],
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: '120363295141350550@newsletter',
-          newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
-          serverMessageId: 143
+        const contextInfo = {
+            mentionedJid: [m.sender],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363295141350550@newsletter',
+                newsletterName: config.OWNER_NAME,
+                serverMessageId: 143
+            }
+        };
+
+        // Function to send menu image
+        const sendMenuImage = async () => {
+            try {
+                return await conn.sendMessage(
+                    from,
+                    {
+                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' },
+                        caption: menuCaption,
+                        contextInfo: contextInfo
+                    },
+                    { quoted: mek }
+                );
+            } catch (e) {
+                console.log('Image send failed, falling back to text');
+                return await conn.sendMessage(
+                    from,
+                    { text: menuCaption, contextInfo: contextInfo },
+                    { quoted: mek }
+                );
+            }
+        };
+
+        // Send image with timeout
+        let sentMsg;
+        try {
+            sentMsg = await Promise.race([
+                sendMenuImage(),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Image send timeout')), 10000))
+            ]);
+        } catch (e) {
+            console.log('Menu send error:', e);
+            sentMsg = await conn.sendMessage(
+                from,
+                { text: menuCaption, contextInfo: contextInfo },
+                { quoted: mek }
+            );
         }
-      }
-    }, { quoted: mek });
+        
+        const messageID = sentMsg.key.id;
 
-    if (sendAudio) {
-      await conn.sendMessage(from, {
-        audio: { url: 'https://files.catbox.moe/a1sh4u.mp3' },
-        mimetype: 'audio/mp4',
-        ptt: true
-      }, { quoted: mek });
+        // Menu data (complete version)
+        const menuData = {
+            '1': {
+                title: "📥 *Download Menu* 📥",
+                content: `╭━━━〔 *Download Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🌐 *Social Media*
+┃★│ • facebook [url]
+┃★│ • mediafire [url]
+┃★│ • tiktok [url]
+┃★│ • twitter [url]
+┃★│ • Insta [url]
+┃★│ • apk [app]
+┃★│ • img [query]
+┃★│ • tt2 [url]
+┃★│ • pins [url]
+┃★│ • apk2 [app]
+┃★│ • fb2 [url]
+┃★│ • pinterest [url]
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🎵 *Music/Video*
+┃★│ • spotify [query]
+┃★│ • play [song]
+┃★│ • play2-10 [song]
+┃★│ • audio [url]
+┃★│ • video [url]
+┃★│ • video2-10 [url]
+┃★│ • ytmp3 [url]
+┃★│ • ytmp4 [url]
+┃★│ • song [name]
+┃★│ • darama [name]
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '2': {
+                title: "👥 *Group Menu* 👥",
+                content: `╭━━━〔 *Group Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🛠️ *Management*
+┃★│ • grouplink
+┃★│ • kickall
+┃★│ • kickall2
+┃★│ • kickall3
+┃★│ • add @user
+┃★│ • remove @user
+┃★│ • kick @user
+┃★╰──────────────
+┃★╭──────────────
+┃★│ ⚡ *Admin Tools*
+┃★│ • promote @user
+┃★│ • demote @user
+┃★│ • dismiss 
+┃★│ • revoke
+┃★│ • mute [time]
+┃★│ • unmute
+┃★│ • lockgc
+┃★│ • unlockgc
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🏷️ *Tagging*
+┃★│ • tag @user
+┃★│ • hidetag [msg]
+┃★│ • tagall
+┃★│ • tagadmins
+┃★│ • invite
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '3': {
+                title: "😄 *Fun Menu* 😄",
+                content: `╭━━━〔 *Fun Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🎭 *Interactive*
+┃★│ • shapar
+┃★│ • rate @user
+┃★│ • insult @user
+┃★│ • hack @user
+┃★│ • ship @user1 @user2
+┃★│ • character
+┃★│ • pickup
+┃★│ • joke
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 😂 *Reactions*
+┃★│ • hrt
+┃★│ • hpy
+┃★│ • syd
+┃★│ • anger
+┃★│ • shy
+┃★│ • kiss
+┃★│ • mon
+┃★│ • cunfuzed
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '4': {
+                title: "👑 *Owner Menu* 👑",
+                content: `╭━━━〔 *Owner Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ ⚠️ *Restricted*
+┃★│ • block @user
+┃★│ • unblock @user
+┃★│ • fullpp [img]
+┃★│ • setpp [img]
+┃★│ • restart
+┃★│ • shutdown
+┃★│ • updatecmd
+┃★╰──────────────
+┃★╭──────────────
+┃★│ ℹ️ *Info Tools*
+┃★│ • gjid
+┃★│ • jid @user
+┃★│ • listcmd
+┃★│ • allmenu
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '5': {
+                title: "🤖 *AI Menu* 🤖",
+                content: `╭━━━〔 *AI Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 💬 *Chat AI*
+┃★│ • ai [query]
+┃★│ • gpt3 [query]
+┃★│ • gpt2 [query]
+┃★│ • gptmini [query]
+┃★│ • gpt [query]
+┃★│ • meta [query]
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🖼️ *Image AI*
+┃★│ • imagine [text]
+┃★│ • imagine2 [text]
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🔍 *Specialized*
+┃★│ • blackbox [query]
+┃★│ • luma [query]
+┃★│ • dj [query]
+┃★│ • khan [query]
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '6': {
+                title: "🎎 *Anime Menu* 🎎",
+                content: `╭━━━〔 *Anime Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🖼️ *Images*
+┃★│ • fack
+┃★│ • dog
+┃★│ • awoo
+┃★│ • garl
+┃★│ • waifu
+┃★│ • neko
+┃★│ • megnumin
+┃★│ • maid
+┃★│ • loli
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🎭 *Characters*
+┃★│ • animegirl
+┃★│ • animegirl1-5
+┃★│ • anime1-5
+┃★│ • foxgirl
+┃★│ • naruto
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '7': {
+                title: "🔄 *Convert Menu* 🔄",
+                content: `╭━━━〔 *Convert Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🖼️ *Media*
+┃★│ • sticker [img]
+┃★│ • sticker2 [img]
+┃★│ • emojimix 😎+😂
+┃★│ • take [name,text]
+┃★│ • tomp3 [video]
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 📝 *Text*
+┃★│ • fancy [text]
+┃★│ • tts [text]
+┃★│ • trt [text]
+┃★│ • base64 [text]
+┃★│ • unbase64 [text]
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '8': {
+                title: "📌 *Other Menu* 📌",
+                content: `╭━━━〔 *Other Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ 🕒 *Utilities*
+┃★│ • timenow
+┃★│ • date
+┃★│ • count [num]
+┃★│ • calculate [expr]
+┃★│ • countx
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🎲 *Random*
+┃★│ • flip
+┃★│ • coinflip
+┃★│ • rcolor
+┃★│ • roll
+┃★│ • fact
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🔍 *Search*
+┃★│ • define [word]
+┃★│ • news [query]
+┃★│ • movie [name]
+┃★│ • weather [loc]
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '9': {
+                title: "💞 *Reactions Menu* 💞",
+                content: `╭━━━〔 *Reactions Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ ❤️ *Affection*
+┃★│ • cuddle @user
+┃★│ • hug @user
+┃★│ • kiss @user
+┃★│ • lick @user
+┃★│ • pat @user
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 😂 *Funny*
+┃★│ • bully @user
+┃★│ • bonk @user
+┃★│ • yeet @user
+┃★│ • slap @user
+┃★│ • kill @user
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 😊 *Expressions*
+┃★│ • blush @user
+┃★│ • smile @user
+┃★│ • happy @user
+┃★│ • wink @user
+┃★│ • poke @user
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            },
+            '10': {
+                title: "🏠 *Main Menu* 🏠",
+                content: `╭━━━〔 *Main Menu* 〕━━━┈⊷
+┃★╭──────────────
+┃★│ ℹ️ *Bot Info*
+┃★│ • ping
+┃★│ • live
+┃★│ • alive
+┃★│ • runtime
+┃★│ • uptime
+┃★│ • repo
+┃★│ • owner
+┃★╰──────────────
+┃★╭──────────────
+┃★│ 🛠️ *Controls*
+┃★│ • menu
+┃★│ • menu2
+┃★│ • restart
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+> ${config.DESCRIPTION}`,
+                image: true
+            }
+        };
+
+        // Message handler with improved error handling
+        const handler = async (msgData) => {
+            try {
+                const receivedMsg = msgData.messages[0];
+                if (!receivedMsg?.message || !receivedMsg.key?.remoteJid) return;
+
+                const isReplyToMenu = receivedMsg.message.extendedTextMessage?.contextInfo?.stanzaId === messageID;
+                
+                if (isReplyToMenu) {
+                    const receivedText = receivedMsg.message.conversation || 
+                                      receivedMsg.message.extendedTextMessage?.text;
+                    const senderID = receivedMsg.key.remoteJid;
+
+                    if (menuData[receivedText]) {
+                        const selectedMenu = menuData[receivedText];
+                        
+                        try {
+                            if (selectedMenu.image) {
+                                await conn.sendMessage(
+                                    senderID,
+                                    {
+                                        image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' },
+                                        caption: selectedMenu.content,
+                                        contextInfo: contextInfo
+                                    },
+                                    { quoted: receivedMsg }
+                                );
+                            } else {
+                                await conn.sendMessage(
+                                    senderID,
+                                    { text: selectedMenu.content, contextInfo: contextInfo },
+                                    { quoted: receivedMsg }
+                                );
+                            }
+
+                            await conn.sendMessage(senderID, {
+                                react: { text: '✅', key: receivedMsg.key }
+                            });
+
+                        } catch (e) {
+                            console.log('Menu reply error:', e);
+                            await conn.sendMessage(
+                                senderID,
+                                { text: selectedMenu.content, contextInfo: contextInfo },
+                                { quoted: receivedMsg }
+                            );
+                        }
+
+                    } else {
+                        await conn.sendMessage(
+                            senderID,
+                            {
+                                text: `❌ *Invalid Option!* ❌\n\nPlease reply with a number between 1-10 to select a menu.\n\n*Example:* Reply with "1" for Download Menu\n\n> ${config.DESCRIPTION}`,
+                                contextInfo: contextInfo
+                            },
+                            { quoted: receivedMsg }
+                        );
+                    }
+                }
+            } catch (e) {
+                console.log('Handler error:', e);
+            }
+        };
+
+        // Add listener
+        conn.ev.on("messages.upsert", handler);
+
+        // Remove listener after 5 minutes
+        setTimeout(() => {
+            conn.ev.off("messages.upsert", handler);
+        }, 300000);
+
+    } catch (e) {
+        console.error('Menu Error:', e);
+        try {
+            await conn.sendMessage(
+                from,
+                { text: `❌ Menu system is currently busy. Please try again later.\n\n> ${config.DESCRIPTION}` },
+                { quoted: mek }
+            );
+        } catch (finalError) {
+            console.log('Final error handling failed:', finalError);
+        }
     }
-  } catch (e) {
-    console.error(`Menu Error (${title}):`, e);
-    throw e;
-  }
-}
-
-// Main Menu
-cmd({
-  pattern: "menu1",
-  desc: "Display all bot commands",
-  category: "menu",
-  react: "💖",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const menuText = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  ✨ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓✨
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} BOT INFORMATION ${rainbow.reverse().join('')}
-👑 Owner » ${config.OWNER_NAME}
-📱 Version » ${pkg.version}
-⚙️ Mode » ${config.MODE.toUpperCase()}
-🔣 Prefix » [${config.PREFIX}]
-⏳ Runtime » ${runtime(process.uptime())}
-${divider(30)}
-
-${rainbow.join('')} COMMAND CATEGORIES ${rainbow.reverse().join('')}
-${randomEmoji()} » ${config.PREFIX}aimenu (AI Tools)
-${randomEmoji()} » ${config.PREFIX}animemenu (Anime)
-${randomEmoji()} » ${config.PREFIX}convertmenu (Converters)
-${randomEmoji()} » ${config.PREFIX}funmenu (Fun)
-${randomEmoji()} » ${config.PREFIX}dlmenu (Downloads)
-${randomEmoji()} » ${config.PREFIX}groupmenu (Group)
-${randomEmoji()} » ${config.PREFIX}ownermenu (Owner)
-${randomEmoji()} » ${config.PREFIX}othermenu (Utilities)
-${divider(30)}
-
-💡 Type ${config.PREFIX}<command> to use
-${config.DESCRIPTION}
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, menuText, 'Main Menu', true);
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// AI Menu
-cmd({
-  pattern: "aimenu",
-  desc: "AI commands menu",
-  category: "menu",
-  react: "🤖",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const aiMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🧠 AI POWER MENU 🧠
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} AI CHATBOTS ${rainbow.reverse().join('')}
-• ai » General AI assistant
-• gpt » ChatGPT interaction
-• gpt4 » GPT-4 model
-• meta » Meta AI
-• bing » Microsoft Bing AI
-• copilot » GitHub Copilot
-• blackbox » Code specialist
-
-${rainbow.join('')} TOOLS ${rainbow.reverse().join('')}
-• tts » Text to speech
-• trt » Translate text
-• fancy » Fancy text generator
-
-${divider(30)}
-💡 Example: ${config.PREFIX}gpt How does AI work?
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, aiMenu, 'AI Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Anime Menu
-cmd({
-  pattern: "animemenu",
-  desc: "Anime commands menu",
-  category: "menu",
-  react: "🧚",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const animeMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🎌 ANIME WORLD 🎌
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} CHARACTERS ${rainbow.reverse().join('')}
-• waifu » Random waifu
-• neko » Cute neko girl
-• maid » Anime maid
-• loli » Loli character
-• foxgirl » Fox girl
-• naruto » Naruto character
-
-${rainbow.join('')} CONTENT ${rainbow.reverse().join('')}
-• animenews » Latest news
-• animegirl » Random girl
-• anime1-5 » Different styles
-• fack » Anime facts
-• dog » Anime dogs
-
-${rainbow.join('')} REACTIONS ${rainbow.reverse().join('')}
-• hug » Anime hug gif
-• kiss » Anime kiss gif
-• poke » Anime poke gif
-
-${divider(30)}
-🎀 Enjoy anime content!
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, animeMenu, 'Anime Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Download Menu
-cmd({
-  pattern: "dlmenu",
-  desc: "Download commands menu",
-  category: "menu",
-  react: "💚",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const dlMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  📥 DOWNLOAD CENTER 📥
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} SOCIAL MEDIA ${rainbow.reverse().join('')}
-• facebook » FB video
-• tiktok » TikTok video
-• twitter » X/Twitter video
-• insta » Instagram media
-
-${rainbow.join('')} MUSIC/VIDEO ${rainbow.reverse().join('')}
-• play » YT audio
-• ytmp3 » YT to MP3
-• ytmp4 » YT to MP4
-• spotify » Track download
-• audio » Audio extractor
-• video » Video downloader
-
-${rainbow.join('')} FILES ${rainbow.reverse().join('')}
-• mediafire » MediaFire
-• apk » APK files
-• git » GitHub repos
-• gdrive » Google Drive
-
-${divider(30)}
-🔍 Usage: ${config.PREFIX}command <url>
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, dlMenu, 'Download Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Group Menu
-cmd({
-  pattern: "groupmenu",
-  desc: "Group commands menu",
-  category: "menu",
-  react: "🥰",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const groupMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🧑‍🤝‍🧑 GROUP MANAGER 🧑‍🤝‍🧑
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} ADMIN TOOLS ${rainbow.reverse().join('')}
-• add » Add members
-• kick » Remove member
-• promote » Make admin
-• demote » Remove admin
-• grouplink » Get invite
-• revoke » Reset link
-
-${rainbow.join('')} SETTINGS ${rainbow.reverse().join('')}
-• setwelcome » Welcome msg
-• setgoodbye » Goodbye msg
-• updategname » Change name
-• updategdesc » Change desc
-• lockgc » Lock group
-• unlockgc » Unlock group
-
-${rainbow.join('')} UTILITIES ${rainbow.reverse().join('')}
-• tagall » Mention all
-• hidetag » Hidden mention
-• getpic » Get group icon
-• ginfo » Group info
-
-${divider(30)}
-⚠️ Admin privileges required
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, groupMenu, 'Group Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Fun Menu
-cmd({
-  pattern: "funmenu",
-  desc: "Fun commands menu",
-  category: "menu",
-  react: "😎",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const funMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🎉 FUN & GAMES 🎉
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} INTERACTIVE ${rainbow.reverse().join('')}
-• ship » Ship two users
-• character » Create avatar
-• hack » Fake hack
-• joke » Random joke
-• insult » Funny roast
-• pickup » Pickup lines
-
-${rainbow.join('')} REACTIONS ${rainbow.reverse().join('')}
-• hug » Send hug
-• kiss » Send kiss
-• poke » Poke someone
-• slap » Slap someone
-• pat » Head pats
-
-${rainbow.join('')} EXPRESSIONS ${rainbow.reverse().join('')}
-• hrt » Heart eyes
-• hpy » Happy face
-• anger » Angry face
-• shy » Shy reaction
-
-${divider(30)}
-🎲 Try them all for fun!
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, funMenu, 'Fun Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Owner Menu
-cmd({
-  pattern: "ownermenu",
-  desc: "Owner commands menu",
-  category: "menu",
-  react: "🔰",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const ownerMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  👑 OWNER COMMANDS 👑
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} BOT CONTROL ${rainbow.reverse().join('')}
-• restart » Restart bot
-• shutdown » Stop bot
-• updatecmd » Update
-• block » Block user
-• unblock » Unblock
-
-${rainbow.join('')} PROFILE ${rainbow.reverse().join('')}
-• setpp » Set profile pic
-• fullpp » Full profile
-• menu » Show menu
-• menu2 » Alternative menu
-
-${rainbow.join('')} DEBUGGING ${rainbow.reverse().join('')}
-• gjid » Get group JID
-• jid » Get user JID
-• listcmd » All commands
-• allmenu » Complete menu
-
-${divider(30)}
-🔒 Restricted to owner only
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, ownerMenu, 'Owner Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Convert Menu
-cmd({
-  pattern: "convertmenu",
-  desc: "Conversion commands menu",
-  category: "menu",
-  react: "🥀",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const convertMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🔄 CONVERTER TOOLS 🔄
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} MEDIA CONVERSION ${rainbow.reverse().join('')}
-• sticker » Image to sticker
-• sticker2 » Video to sticker
-• tomp3 » Media to audio
-• take » Take sticker
-
-${rainbow.join('')} TEXT TOOLS ${rainbow.reverse().join('')}
-• tts » Text to speech
-• trt » Translate text
-• fancy » Stylish text
-• font » Different fonts
-
-${rainbow.join('')} OTHER ${rainbow.reverse().join('')}
-• img » Image editor
-• vv » View once tools
-
-${divider(30)}
-🛠️ Powerful conversion tools
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, convertMenu, 'Convert Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
-});
-
-// Other Menu
-cmd({
-  pattern: "othermenu",
-  desc: "Utility commands menu",
-  category: "menu",
-  react: "🤖",
-  filename: __filename
-}, async (conn, mek, m, { from, reply }) => {
-  try {
-    const otherMenu = `
-╭━━━━━━━━━━━━━━━━━━━━╮
-  🛠️ UTILITY TOOLS 🛠️
-╰━━━━━━━━━━━━━━━━━━━━╯
-
-${rainbow.join('')} INFORMATION ${rainbow.reverse().join('')}
-• weather » Weather report
-• news » Latest news
-• movie » Movie info
-• define » Dictionary
-• wikipedia » Wiki search
-• fact » Interesting facts
-
-${rainbow.join('')} SOCIAL ${rainbow.reverse().join('')}
-• githubstalk » GitHub info
-• pair » Match users
-• pair2 » Alternative match
-• vv » View once tools
-
-${rainbow.join('')} DEVELOPER ${rainbow.reverse().join('')}
-• srepo » Search repos
-• gpass » Generate password
-• yts » YT search
-• ytv » YT video search
-
-${divider(30)}
-🔧 Useful everyday tools
-    `;
-
-    await sendMenu(conn, from, mek, m.sender, otherMenu, 'Utility Menu');
-  } catch (e) {
-    reply(`❌ Error: ${e.message}`);
-  }
 });
