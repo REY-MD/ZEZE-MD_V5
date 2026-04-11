@@ -49,7 +49,7 @@ cmd({
         }, { quoted: mek })
 
         // 🎥 Arslan VIDEO API
-        const api = `https://arslan-apis.vercel.app/download/ytmp4?url=${encodeURIComponent(vid.url)}`
+        const api = `https://apiskeith.top/download/ytmp4?url=${encodeURIComponent(vid.url)}`
         const res = await axios.get(api, { timeout: 60000 })
 
         if (!res.data?.status || !res.data?.result?.download?.url) {
