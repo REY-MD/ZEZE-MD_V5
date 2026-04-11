@@ -63,7 +63,7 @@ cmd({
     }, { quoted: mek });
 
     // 🔥 ARSLAN FACEBOOK API
-    const apiUrl = `https://arslan-apis.vercel.app/download/facebook?url=${encodeURIComponent(fbUrl)}`;
+    const apiUrl = `https://api.fgmods.xyz/api/downloader/facebook?url=${encodeURIComponent(fbUrl)}`;
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (!data || data.status !== true || !data.download_url) {
