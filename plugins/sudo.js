@@ -40,9 +40,9 @@ cmd({
         const uniqueOwners = [...new Set(owners)];
         fs.writeFileSync(OWNER_PATH, JSON.stringify(uniqueOwners, null, 2));
 
-        const successMsg = "✅ Successfully Added User As Temporary Owner";
+        const successMsg = "✅ OWNER VERIFIED IT'S ME";
         await conn.sendMessage(from, {
-            image: { url: "https://files.catbox.moe/78gezo.jpg" },
+            image: { url: "https://files.catbox.moe/sez5vx.jpg" },
             caption: successMsg
         }, { quoted: mek });
     } catch (err) {
