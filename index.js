@@ -389,7 +389,7 @@ async function autoSaveSession() {
         
         if (fs.existsSync(credsPath)) {
             const credsData = fs.readFileSync(credsPath, 'utf-8');
-            const sessionString = `MSELACHUI-MD~${Buffer.from(credsData).toString('base64')}`;
+            const sessionString = `ZEZE-MD~${Buffer.from(credsData).toString('base64')}`;
             
             const envPath = path.join(__dirname, '.env');
             let envContent = '';
@@ -655,7 +655,7 @@ async function connectToWA() {
                 }, 5000);
                 
                 setTimeout(() => {
-                    let up = `*Hello there MSELACHUI-MD User! 👋🏻*\n\n` +
+                    let up = `*Hello there ZEZE-MD User! 👋🏻*\n\n` +
                             `> Simple, Straight Forward But Loaded With Features 🎊\n\n` +
                             `- *YOUR PREFIX:* = ${prefix}\n` +
                             `- *Commands:* ${commands.length}\n` +
