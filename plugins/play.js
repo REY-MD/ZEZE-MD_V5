@@ -1,92 +1,83 @@
-const {cmd , commands} = require('../command')
-const fg = require('api-dylux')
-const yts = require('yt-search')
+const { lite } = require('../lite');
+const { ytsearch } = require('@dark-yasiya/yt-dl.js');
+const axios = require('axios');
+const fs = require('fs');
+const config = require('../settings');
+const path = require('path');
+const ffmpeg = require('fluent-ffmpeg');
 
-cmd({
-    pattern: "play",
-    alias: ["ytmp","audio"],
-    desc: "download songs",
+lite({
+    pattern: "play1",
+    alias: ["ytplay", "ytmp3"],
+    react: "📲",
+    desc: "Download YouTube song or video",
     category: "download",
-    react: "🎵",
+    use: '.play <song name or YouTube URL>',
     filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please provide a link or a name 🔎...*")
-const search = await yts(q)
-const data = search.videos[0]
-const url = data.url
+}, async (conn, mek, m, { from, reply, q }) => {
+    try {
+        if (!q && !m.quoted) return reply("❓ What song or URL do you want to download? You can also reply to a message with a URL.");
+        
+        let input = q || (m.quoted && m.quoted.text);
+        if (!input) return reply("❌ No valid input provided!");
 
-let desc = `╭━━━〔 *𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓* 〕━━━┈⊷
-┃▸┃๏ *MUSIC DOWNLOADER*
-╭━❮ *Download Audio* ❯━┈⊷
-┃▸╭─────────────·๏
-┃▸┃๏ *Tital* - ${data.title}
-┃▸┃๏ *Views* - ${data.views}
-┃▸┃๏ *Description* - ${data.description}
-┃▸┃๏ *Duration:* ${data.timestamp}}
-┃▸┃๏ *Link* - ${data.url}
-┃▸┃๏ *Ago* - ${data.ago}
-┃▸└────────────┈⊷
-╰━━━━━━━━━━━━━━━⪼
-> *𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*`
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+        let isAudio = !input.toLowerCase().includes("video");
 
-//download audio
+        await reply("🔍 Searching, please wait...");
 
-let down = await fg.yta(url)  
-let downloadUrl = down.dl_url
+        const search = await ytsearch(input);
+        if (!search.results.length) return reply("❌ No results found!");
 
-//send audio
-await conn.sendMessage(from,{audio:{url: downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
-await conn.sendMessage(from,{document:{url: downloadUrl},mimetype:"audio/mpeg",fileName:data.title + "mp3",caption:"©⎈ Sɪʟᴠᴀ Ｓᴘᴀʀᴋ мᎠ ⎈"},{quoted:mek})
-}catch(e){
-reply(`${e}`)
-}
-})
+        const vid = search.results[0];
+        const title = vid.title.replace(/[^a-zA-Z0-9 ]/g, "");
+        const duration = vid.timestamp;
+        const videoUrl = vid.url;
+        const thumbnail = vid.thumbnail;
+        const outputPath = path.join(__dirname, `${title}.mp3`);
 
-//===========darama-dl===========
+        const apis = [
+            `https://xploader-api.vercel.app/ytmp3?url=${videoUrl}`,
+            `https://apis.davidcyriltech.my.id/youtube/mp3?url=${videoUrl}`,
+            `https://api.ryzendesu.vip/api/downloader/ytmp3?url=${videoUrl}`,
+            `https://api.dreaded.site/api/ytdl/audio?url=${videoUrl}`
+        ];
 
-cmd({
-    pattern: "darama",
-    alias: ["video2","ytmp4"],    
-    desc: "download video",
-    category: "download",
-    react: "🎥",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please provide a link or a name 🔎...*")
-const search = await yts(q)
-const data = search.videos[0]
-const url = data.url
+        if (isAudio) {
+            for (const api of apis) {
+                try {
+                    const res = await axios.get(api);
+                    const data = res.data;
+                    if (!(data.status === 200 || data.success)) continue;
 
-let des = `╭━━━〔 *⎈ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⎈* 〕━━━┈⊷
-┃▸┃๏ *VIDEO DOWNLOADER*
-╭━❮ *Download Audio* ❯━┈⊷
-┃▸╭─────────────·๏
-┃▸┃๏ *Tital* - ${data.title}
-┃▸┃๏ *Views* - ${data.views}
-┃▸┃๏ *Description* - ${data.description}
-┃▸┃๏ *Duration:* ${data.timestamp}}
-┃▸┃๏ *Link* - ${data.url}
-┃▸┃๏ *Ago* - ${data.ago}
-┃▸└────────────┈⊷
-╰━━━━━━━━━━━━━━━⪼
-> * 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓*`
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:des},{quoted:mek});
+                    const audioUrl = data.result?.downloadUrl || data.url;
+                    if (!audioUrl) continue;
 
-//download video
+                    const stream = await axios({ url: audioUrl, method: "GET", responseType: "stream" });
+                    if (stream.status !== 200) continue;
 
-let down = await fg.ytv(url)  
-let downloadUrl = down.dl_url
+                    return ffmpeg(stream.data)
+                        .toFormat('mp3')
+                        .save(outputPath)
+                        .on('end', async () => {
+                            await conn.sendMessage(from, {
+                                document: { url: outputPath },
+                                mimetype: 'audio/mp3',
+                                fileName: `${title}.mp3`,
+                                caption: `🎶 *Title:* ${vid.title}\n⏱️ *Duration:* ${duration}\n\n> Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                                thumbnail: { url: thumbnail }
+                            }, { quoted: mek });
+                            fs.unlinkSync(outputPath);
+                        })
+                        .on('error', err => reply("❌ Conversion failed\n" + err.message));
+                } catch (err) {
+                    continue;
+                }
+            }
+            return reply("❌ All APIs failed or are down.");
+        }
 
-//send video
-await conn.sendMessage(from,{video:{url: downloadUrl},mimetype:"video/mp4"},{quoted:mek})
-await conn.sendMessage(from,{document:{url: downloadUrl},mimetype:"video/mp4",fileName:data.title + "mp4",caption:"©⎈ Sɪʟᴠᴀ Ｓᴘᴀʀᴋ мᎠ ⎈"},{quoted:mek})
-    
-}catch(a){
-reply(`${a}`)
-}
-})
+    } catch (e) {
+        console.error(e);
+        reply("❌ Something went wrong\n" + e.message);
+    }
+});
