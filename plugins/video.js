@@ -48,7 +48,7 @@ cmd({
         }, { quoted: mek })
 
         // 📥 MAFIA API
-        const api = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${videoUrl)}`
+        const api = `https://apis-keith.vercel.app/download/dlmp4?url=${videoUrl)}`
         const res = await axios.get(api, { timeout: 60000 })
 
         if (!res.data?.status || !res.data?.result?.download?.url) {
