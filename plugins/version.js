@@ -18,7 +18,7 @@ cmd({
   try {
     // Read local version data
     const localVersionPath = path.join(__dirname, '../data/version.json');
-    let localVersion = 'Unknown';
+    let localVersion = '5.0.1';
     let changelog = 'No changelog available.';
     if (fs.existsSync(localVersionPath)) {
       const localData = JSON.parse(fs.readFileSync(localVersionPath));
@@ -28,7 +28,7 @@ cmd({
 
     // Fetch latest version data from GitHub
     const rawVersionUrl = 'https://raw.githubusercontent.com/REY-MD/ZEZE-MD_V5/main/data/version.json';
-    let latestVersion = '4.01';
+    let latestVersion = '4.0.1';
     let latestChangelog = 'No changelog available.';
     try {
       const { data } = await axios.get(rawVersionUrl);
