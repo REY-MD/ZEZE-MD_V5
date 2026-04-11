@@ -16,7 +16,7 @@ async (conn, mek, m, { from }) => {
         // vCard
         const vcard = 
 `BEGIN:VCARD
-VERSION:3.0
+VERSION:5.0.1
 FN:${ownerName}
 ORG: zezetech;
 TEL;type=CELL;type=VOICE;waid=${ownerNumber.replace('+', '')}:${ownerNumber}
