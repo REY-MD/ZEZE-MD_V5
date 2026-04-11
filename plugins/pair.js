@@ -1,41 +1,60 @@
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
     pattern: "pair",
     alias: ["getpair", "clonebot"],
     react: "✅",
-    desc: "Get pairing code for ZEZE-MD bot",
+    desc: "Get pairing code for 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 bot",
     category: "download",
-    use: ".pair +255617657XXX",
+    use: ".pair 255617xxxxxx",
     filename: __filename
-}, async (conn, mek, m, {
-    from, quoted, body, isCmd, command, args, q, isGroup,
-    sender, senderNumber, botNumber2, botNumber, pushname,
-    isMe, isOwner, groupMetadata, groupName, participants,
-    groupAdmins, isBotAdmins, isAdmins, reply
-}) => {
+}, async (conn, mek, m, { reply, q, senderNumber }) => {
     try {
-        const phoneNumber = q ? q.trim() : null;
+        // 📱 number handling
+        const phone = q
+            ? q.replace(/[^0-9]/g, '')
+            : senderNumber.replace(/[^0-9]/g, '');
 
-        // Validate phone number format
-        if (!phoneNumber || !phoneNumber.match(/^\+?\d{10,15}$/)) {
-            return await reply("❌ Please provide a valid phone number with the country code.\nExample: `.pair +255617657XXX`");
+        if (!phone || phone.length < 10 || phone.length > 15) {
+            return reply(
+                "❌ Please provide a valid WhatsApp number.\n\nExample:\n.pair 255617xxxxxxx"
+            );
         }
 
-        // Request pairing code from your backend
-        const response = await axios.get(`https://zeze-id-scanner.onrender.com/pair?phone=${encodeURIComponent(phoneNumber)}`);
+        // 🌐 API call
+        const url = `https://paring-site-44t7.onrender.com/code?number=${phone}`;
+        const response = await axios.get(url, { timeout: 15000 });
 
-        if (!response.data || !response.data.code) {
-            return await reply("❌ Failed to retrieve pairing code. Please try again later.");
+        if (!response.data) {
+            return reply("❌ Failed to get pairing code. Please try again later.");
         }
 
-        const pairingCode = response.data.code;
+        // 🔑 flexible response handling
+        const pairCode =
+            response.data.code ||
+            response.data.pair ||
+            response.data.pairingCode ||
+            response.data.result;
 
-        await reply(`✅ *ZEZE-MD PAIRING SUCCESSFUL!*\n\n📲 *Phone:* ${phoneNumber}\n🔐 *Pairing Code:* ${pairingCode}`);
+        if (!pairCode) {
+            return reply("❌ Pairing service is busy. Please try again after a short while.");
+        }
 
-    } catch (error) {
-        console.error("Pair command error:", error);
-        await reply("❌ An error occurred while fetching the pairing code. Please try again later.");
+        // ✅ success message
+        await reply(
+            `*𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 PAIRING CODE*\n\n` +
+            `🔑 Code: *${pairCode}*\n\n` +
+            `_Enter this code in WhatsApp to link your device._`
+        );
+
+        // ⏳ resend clean code
+        setTimeout(async () => {
+            await reply(`${pairCode}`);
+        }, 2000);
+
+    } catch (err) {
+        console.error("PAIR ERROR:", err.message);
+        reply("❌ An error occurred. Please try again after a short while.");
     }
 });
