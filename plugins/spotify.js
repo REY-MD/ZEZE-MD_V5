@@ -7,7 +7,7 @@ const stream = require('stream');
 const pipeline = promisify(stream.pipeline);
 
 cmd({
-    pattern: "spotify",
+    pattern: "play",
     alias: ["splay", "spot"],
     react: "🎵",
     desc: "Direct Spotify Song Downloader",
