@@ -1,57 +1,60 @@
-const {
-  cmd
-} = require('../command');
-const yts = require('yt-search');
+const { lite } = require('../lite');
+const { ytsearch } = require('@dark-yasiya/yt-dl.js');
+const fetch = require("node-fetch");
 const path = require('path');
-const axios = require("axios");
-const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
 
-// don't remove creadit by awaisxd
 
-cmd({
-  'pattern': 'video1',
-  'react': '🎬',
-  'desc': "Download video from YouTube by searching for keywords.",
-  'category': "media",
-  'use': ".video4 <keywords>",
-  'filename': __filename
-}, async (_0x24c315, _0x3a6d67, _0x1fe974, {
-  from: _0x767c92,
-  args: _0x55bbc3,
-  reply: _0x5b120e
-}) => {
-  try {
-    const _0x4d3a95 = _0x55bbc3.join(" ");
-    if (!_0x4d3a95) {
-      return _0x5b120e("*Please provide a video title or keywords to search for.*");
+lite({
+    pattern: "video1",
+    alias: ["ytvideo", "mp4"],
+    react: "📽",
+    desc: "Download YouTube video (MP4)",
+    category: "download",
+    use: ".video <query>",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, q }) => {
+    try {
+        if (!q) return reply("❓ What video do you want to download? Please provide a search term.");
+
+        await reply("🔍 *Searching for your video, please wait...*");
+
+        const search = await ytsearch(q);
+        if (!search.results.length) return reply("❌ No results found for your query.");
+
+        const { title, thumbnail, timestamp, url } = search.results[0];
+        const videoUrl = encodeURIComponent(url);
+
+        // Try primary API
+        const api1 = `https://apis-keith.vercel.app/download/dlmp4?url=${videoUrl}`;
+        const api2 = `https://apis.davidcyriltech.my.id/download/ytmp4?url=${videoUrl}`;
+
+        let data;
+
+        try {
+            const res1 = await fetch(api1);
+            data = await res1.json();
+            if (!data?.status || !data?.result?.downloadUrl) throw new Error("Primary API failed");
+        } catch {
+            const res2 = await fetch(api2);
+            data = await res2.json();
+            if (!data?.success || !data?.result?.download_url) throw new Error("Both APIs failed");
+        }
+
+        const downloadUrl = data.result.downloadUrl || data.result.download_url;
+
+        await conn.sendMessage(from, {
+            image: { url: thumbnail },
+            caption: `🎬 *Video Found:*\n\n📌 *Title:* ${title}\n⏱️ *Duration:* ${timestamp}\n🔗 *Link:* ${url}\n\n> Powered by Malvin`
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, {
+            video: { url: downloadUrl },
+            mimetype: "video/mp4",
+            caption: `🎬 *Video Downloaded Successfully!*\n\n> Powered by Suho MD`
+        }, { quoted: mek });
+
+    } catch (error) {
+        reply(`❌ An error occurred: ${error.message}`);
     }
-    _0x5b120e("*_🎬 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 VIDEO FOUND UPLOADING PLZ WAIT_*");
-    const _0x2110e1 = await yts(_0x4d3a95);
-    if (!_0x2110e1.videos || _0x2110e1.videos.length === 0x0) {
-      return _0x5b120e("❌ No results found for \"" + _0x4d3a95 + "\".");
-    }
-    const _0x4ed4c1 = _0x2110e1.videos[0x0];
-    const _0x2ef690 = _0x4ed4c1.url;
-    const _0x23109c = "https://api.davidcyriltech.my.id/download/ytmp4?url=" + _0x2ef690;
-    const _0x567fa0 = await axios.get(_0x23109c);
-    if (!_0x567fa0.data.success) {
-      return _0x5b120e("❌ Failed to fetch video for \"" + _0x4d3a95 + "\".");
-    }
-    const {
-      title: _0x390c02,
-      download_url: _0x519f84
-    } = _0x567fa0.data.result;
-    await _0x24c315.sendMessage(_0x767c92, {
-      'video': {
-        'url': _0x519f84
-      },
-      'mimetype': 'video/mp4',
-      'caption': _0x390c02
-    }, {
-      'quoted': _0x3a6d67
-    });
-  } catch (_0x5e8828) {
-    console.error(_0x5e8828);
-    _0x5b120e("❌ An error occurred while processing your request.");
-  }
 });
