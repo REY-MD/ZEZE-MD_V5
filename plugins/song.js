@@ -5,7 +5,7 @@ const fg = require('api-dylux');
 
 // -------- Song Download --------
 cmd({
-    pattern: 'song',
+    pattern: 'song1',
     desc: 'download songs',
     react: "🎶",
     category: 'download',
