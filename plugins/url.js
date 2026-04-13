@@ -6,7 +6,7 @@ const path = require("path");
 const { cmd, commands } = require("../command");
 
 cmd({
-  'pattern': "tourl",
+  'pattern': "url",
   'alias': ["imgtourl", "imgurl", "url", "geturl", "upload"],
   'react': '🖇',
   'desc': "Convert media to Catbox URL",
