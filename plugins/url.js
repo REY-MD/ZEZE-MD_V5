@@ -62,10 +62,10 @@ cmd({
 
     // Send response
     await reply(
-      `*${mediaType} Uploaded Successfully*\n\n` +
+      `*${mediaType} ᴜᴘʟᴏᴀᴅᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ*\n\n` +
       `*Size:* ${formatBytes(mediaBuffer.length)}\n` +
       `*URL:* ${mediaUrl}\n\n` +
-      `> © Uploaded by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇 💜`
+      `> © *_📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇*`
     );
 
   } catch (error) {
