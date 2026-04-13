@@ -41,10 +41,10 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ┃◈┃• 📍 pinterest
 ┃◈┃• 🎶 spotify
 ┃◈┃• 🎧 play
-┃◈┃• 🎧 play2
+┃◈┃• 🎧 play1
 ┃◈┃• 🔉 audio
 ┃◈┃• 🎬 video
-┃◈┃• 📹 video2
+┃◈┃• 📹 videohd
 ┃◈┃• 🎵 ytmp3
 ┃◈┃• 📹 ytmp4
 ┃◈┃• 🎶 song
@@ -261,7 +261,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ╭━━〔 ⚡ *MAIN MENU* 〕━━┈⊷
 ┃◈╭─────────────────·๏
 ┃◈┃• 🏓 ping
-┃◈┃• 🏓 ping2
+┃◈┃• 🏓 ping1
 ┃◈┃• 🚀 speed
 ┃◈┃• 📡 live
 ┃◈┃• 💚 alive
@@ -270,7 +270,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ┃◈┃• 📦 repo
 ┃◈┃• 👑 owner
 ┃◈┃• 📜 menu
-┃◈┃• 📜 menu2
+┃◈┃• 📜 allmenu
 ┃◈┃• 🔄 restart
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷
@@ -344,7 +344,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         await conn.sendMessage(
             from,
             {
-                image: { url: config.MENU_IMAGE_URL || '' },
+                image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/sez5vx.jpg' },
                 caption: dec,
                 contextInfo: {
                     mentionedJid: [m.sender],
