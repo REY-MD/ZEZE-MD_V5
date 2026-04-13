@@ -19,7 +19,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ‎*├⬡ .test*
 ‎*├⬡ .update*
 ‎*├⬡ .zeze-md*
-‎*├⬡ .visionʟ*
+‎*├⬡ .vision*
 ‎*├⬡ .support*
 ‎*├⬡ .viewones*
 ‎*├⬡ .video*
@@ -28,7 +28,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ‎*├⬡ .anti-link*
 ‎*├⬡ .anti-delete*
 ‎*├⬡ .save*
-‎*├⬡ .ʙᴏᴏᴍ*
+‎*├⬡ .live*
 ‎*├⬡ .tagall*
 ‎*├⬡ .url*
 ‎*├⬡ .youtube*
