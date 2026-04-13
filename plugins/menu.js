@@ -8,7 +8,7 @@ const { runtime } = require('../lib/functions')
 cmd({
     pattern: "menu",
     alias: ["allmenu", "fullmenu"],
-    use: '.menu2',
+    use: '.menu',
     desc: "Show all bot commands",
     category: "menu",
     react: "📜",
@@ -22,7 +22,7 @@ async (conn, mek, m, { from, reply }) => {
 ┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
 ┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
 ┃◈┃• 🌐 Platform : *Heroku*
-┃◈┃• 📦 Version : *4.0.0*
+┃◈┃• 📦 Version : *5.0.1*
 ┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
 ┃◈╰─────────────────┈⊷
 ╰━━━━━━━━━━━━━━━━━━━┈⊷\n`;
