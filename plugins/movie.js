@@ -1,176 +1,78 @@
-const { cmd } = require('../command')
-const axios = require('axios')
-const yts = require('yt-search')
-const fs = require('fs')
-const path = require('path')
-const ffmpeg = require('fluent-ffmpeg')
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
-
-ffmpeg.setFfmpegPath(ffmpegPath)
-
-// ── GiftedTech API ──
-const GiftedTechApi = "https://apis.davidcyriltech.my.id"
-const GiftedApiKey = "gifted-md"
+const axios = require('axios');
+const { cmd } = require('../command');
 
 cmd({
     pattern: "movie",
-    alias: ["film", "gtmovie", "mvdl"],
-    desc: "Movie info + trailer",
-    category: "search",
+    desc: "Fetch detailed information about a movie.",
+    category: "utility",
     react: "🎬",
     filename: __filename
-}, async (conn, mek, m, { from, text, reply }) => {
+},
+async (conn, mek, m, { from, reply, sender, args }) => {
     try {
-        if (!text) {
-            return reply("❌ Movie ka naam likho\nExample:\n.movie Avengers")
+        // Properly extract the movie name from arguments
+        const movieName = args.length > 0 ? args.join(' ') : m.text.replace(/^[\.\#\$\!]?movie\s?/i, '').trim();
+        
+        if (!movieName) {
+            return reply("📽️ Please provide the name of the movie.\nExample: .movie Iron Man");
         }
 
-        await reply("🔍 Movie dhoondh raha hoon...")
+        const apiUrl = `https://apis.davidcyriltech.my.id/imdb?query=${encodeURIComponent(movieName)}`;
+        const response = await axios.get(apiUrl);
 
-        const apiKey = "38f19ae1"
+        if (!response.data.status || !response.data.movie) {
+            return reply("🚫 Movie not found. Please check the name and try again.");
+        }
 
-        // ── Tafuta movie kwenye OMDB ──
-        const searchRes = await axios.get(
-            `http://www.omdbapi.com/?s=${encodeURIComponent(text)}&apikey=${apiKey}`,
-            { timeout: 10000 }
-        )
+        const movie = response.data.movie;
+        
+        // Format the caption
+        const dec = `
+🎬 *${movie.title}* (${movie.year}) ${movie.rated || ''}
 
-        if (searchRes.data.Response === "False")
-            return reply(`❌ Movie nahi mili: ${searchRes.data.Error}`)
+⭐ *IMDb:* ${movie.imdbRating || 'N/A'} | 🍅 *Rotten Tomatoes:* ${movie.ratings.find(r => r.source === 'Rotten Tomatoes')?.value || 'N/A'} | 💰 *Box Office:* ${movie.boxoffice || 'N/A'}
 
-        const movieID = searchRes.data.Search[0].imdbID
-        const detailsRes = await axios.get(
-            `http://www.omdbapi.com/?i=${movieID}&apikey=${apiKey}`,
-            { timeout: 10000 }
-        )
+📅 *Released:* ${new Date(movie.released).toLocaleDateString()}
+⏳ *Runtime:* ${movie.runtime}
+🎭 *Genre:* ${movie.genres}
 
-        const movie = detailsRes.data
-        if (movie.Response === "False")
-            return reply(`❌ Error: ${movie.Error}`)
+📝 *Plot:* ${movie.plot}
 
-        // ── Tuma maelezo mafupi + poster ──
-        const poster = movie.Poster !== "N/A" ? movie.Poster : null
+🎥 *Director:* ${movie.director}
+✍️ *Writer:* ${movie.writer}
+🌟 *Actors:* ${movie.actors}
 
-        await conn.sendMessage(from, {
-            ...(poster
-                ? { image: { url: poster } }
-                : {}),
-            text: !poster ? `
-╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 🎬 𝐓𝐢𝐭𝐥𝐞: ${movie.Title} (${movie.Year})
-│❀ ⭐ 𝐈𝐌𝐃𝐛: ${movie.imdbRating}/10
-│❀ 🎭 𝐆𝐞𝐧𝐫𝐞: ${movie.Genre}
-│❀ ⏱️ 𝐑𝐮𝐧𝐭𝐢𝐦𝐞: ${movie.Runtime}
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 📖 ${movie.Plot}
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
+🌍 *Country:* ${movie.country}
+🗣️ *Language:* ${movie.languages}
+🏆 *Awards:* ${movie.awards || 'None'}
 
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-` : undefined,
-            caption: poster ? `
-╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 🎬 𝐓𝐢𝐭𝐥𝐞: ${movie.Title} (${movie.Year})
-│❀ ⭐ 𝐈𝐌𝐃𝐛: ${movie.imdbRating}/10
-│❀ 🎭 𝐆𝐞𝐧𝐫𝐞: ${movie.Genre}
-│❀ ⏱️ 𝐑𝐮𝐧𝐭𝐢𝐦𝐞: ${movie.Runtime}
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 📖 ${movie.Plot}
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
+[View on IMDb](${movie.imdbUrl})
+`;
 
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-` : undefined,
-        }, { quoted: mek })
+        // Send message with the requested format
+        await conn.sendMessage(
+            from,
+            {
+                image: { 
+                    url: movie.poster && movie.poster !== 'N/A' ? movie.poster : 'https://files.catbox.moe/4ggu0a.jpg'
+                },
+                caption: dec,
+                contextInfo: {
+                    mentionedJid: [sender],
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363295141350550@newsletter',
+                        newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
+                        serverMessageId: 143
+                    }
+                }
+            },
+            { quoted: mek }
+        );
 
-        // ── Tafuta trailer YouTube ──
-        await reply("🎬 Trailer dhoondh raha hoon...")
-
-        const ytResult = await yts(`${movie.Title} ${movie.Year} official trailer`)
-        const trailer = ytResult.videos.find(v => v.seconds <= 300 && v.seconds > 30)
-
-        if (!trailer) return reply("❌ Trailer nahi mila YouTube pe")
-
-        // ── Download trailer via GiftedTech ──
-        const res = await axios.get(
-            `${GiftedTechApi}/api/download/ytmp4?apikey=${GiftedApiKey}&url=${encodeURIComponent(trailer.url)}`,
-            { timeout: 60000 }
-        )
-
-        const d = res.data
-        const dlUrl =
-            d?.result?.download?.url ||
-            d?.result?.download_url ||
-            d?.result?.link ||
-            d?.link ||
-            d?.url
-
-        if (!dlUrl) return reply("❌ Trailer download error, thori dair baad try karo")
-
-        // ── Download na process na ffmpeg ──
-        const tempDir = path.join(__dirname, '../temp')
-        if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir)
-
-        const rawPath = path.join(tempDir, `raw_${Date.now()}.mp4`)
-        const finalPath = path.join(tempDir, `final_${Date.now()}.mp4`)
-
-        const stream = await axios({
-            url: dlUrl,
-            method: "GET",
-            responseType: "stream",
-            timeout: 120000
-        })
-
-        await new Promise((resolve, reject) => {
-            const w = fs.createWriteStream(rawPath)
-            stream.data.pipe(w)
-            w.on("finish", resolve)
-            w.on("error", reject)
-        })
-
-        await new Promise((resolve, reject) => {
-            ffmpeg(rawPath)
-                .outputOptions([
-                    "-map 0:v:0",
-                    "-map 0:a:0?",
-                    "-movflags +faststart",
-                    "-pix_fmt yuv420p",
-                    "-vf scale=trunc(iw/2)*2:trunc(ih/2)*2",
-                    "-profile:v baseline",
-                    "-level 3.0"
-                ])
-                .videoCodec("libx264")
-                .audioCodec("aac")
-                .audioBitrate("128k")
-                .format("mp4")
-                .on("end", resolve)
-                .on("error", reject)
-                .save(finalPath)
-        })
-
-        // ── Tuma trailer ──
-        await conn.sendMessage(from, {
-            video: fs.readFileSync(finalPath),
-            mimetype: "video/mp4",
-            caption: `
-╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│❀ 🎬 𝐓𝐫𝐚𝐢𝐥𝐞𝐫: ${movie.Title}
-│❀ ⭐ 𝐈𝐌𝐃𝐛: ${movie.imdbRating}/10
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓
-`
-        }, { quoted: mek })
-
-        // ── Futa temp files ──
-        fs.unlinkSync(rawPath)
-        fs.unlinkSync(finalPath)
-
-    } catch (err) {
-        console.error("MOVIE ERROR:", err)
-        reply("❌ Movie error, thori dair baad try karo")
+    } catch (e) {
+        console.error('Movie command error:', e);
+        reply(`❌ Error: ${e.message}`);
     }
-})
-
+});
