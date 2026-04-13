@@ -1,102 +1,41 @@
 const axios = require("axios");
 const { cmd } = require("../command");
 
-// ZEZE-MD stylish captions (ROTATING)
-const fbTitles = [
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 📥 Facebook Video
-│❀ ✅ Download Successful
-│❀ ⚡ Quality: HD
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-
-> ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
-
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 🎬 Facebook Video Ready
-│❀ 🚀 Fast Download
-│❀ 📦 No Watermark
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-
-> ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`
-];
-
-let fbTitleIndex = 0;
-
 cmd({
   pattern: "fb",
-  alias: ["facebook", "fbvideo"],
-  react: "📥",
+  alias: ["facebook", "fbdl"],
   desc: "Download Facebook videos",
   category: "download",
-  use: ".fb <facebook url>",
-  filename: __filename
-}, async (conn, mek, m, { from, reply, args }) => {
+  filename: __filename,
+  use: "<Facebook URL>",
+}, async (conn, m, store, { from, args, q, reply }) => {
   try {
-    const fbUrl = args[0];
-
-    if (!fbUrl || !fbUrl.includes("facebook.com")) {
-      return reply(
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❌ Invalid Facebook URL
-│✎ Example:
-│ .fb https://facebook.com/xxxx
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭`
-      );
+    // Check if a URL is provided
+    if (!q || !q.startsWith("http")) {
+      return reply("*`Need a valid Facebook URL`*\n\nExample: `.fb https://www.facebook.com/...`");
     }
 
-    await conn.sendMessage(from, { react: { text: "⏳", key: m.key } });
+    // Add a loading react
+    await conn.sendMessage(from, { react: { text: '⏳', key: m.key } });
 
-    await conn.sendMessage(from, {
-      text:
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│🔍 Processing Link
-│📥 Fetching Video
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭`
-    }, { quoted: mek });
+    // Fetch video URL from the API
+    const apiUrl = `https://www.velyn.biz.id/api/downloader/facebookdl?url=${encodeURIComponent(q)}`;
+    const { data } = await axios.get(apiUrl);
 
-    // 🔥 ARSLAN FACEBOOK API
-    const apiUrl = `https://api.fgmods.xyz/api/downloader/facebook?url=${encodeURIComponent(fbUrl)}`;
-    const { data } = await axios.get(apiUrl, { timeout: 30000 });
-
-    if (!data || data.status !== true || !data.download_url) {
-      return reply(
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❌ Download Failed
-│⚠️ Video may be private
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭`
-      );
+    // Check if the API response is valid
+    if (!data.status || !data.data || !data.data.url) {
+      return reply("❌ Failed to fetch the video. Please try another link.");
     }
 
-    const caption = fbTitles[fbTitleIndex];
-    fbTitleIndex = (fbTitleIndex + 1) % fbTitles.length;
-
+    // Send the video to the user
+    const videoUrl = data.data.url;
     await conn.sendMessage(from, {
-      video: { url: data.download_url },
-      caption,
-      mimetype: "video/mp4"
-    }, { quoted: mek });
+      video: { url: videoUrl },
+      caption: "📥 *Facebook Video Downloaded*\n\n- *Powered By Criss Vevo ✅*",
+    }, { quoted: m });
 
-    await conn.sendMessage(from, { react: { text: "✅", key: m.key } });
-
-  } catch (err) {
-    console.error("FB ERROR:", err);
-    reply(
-`╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❌ Facebook Download Error
-│⏳ Try again later
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭`
-    );
+  } catch (error) {
+    console.error("Error:", error); // Log the error for debugging
+    reply("❌ Error fetching the video. Please try again.");
   }
 });
