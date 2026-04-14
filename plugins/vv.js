@@ -2,7 +2,7 @@ const { cmd } = require("../command");
 
 cmd({
   pattern: "vv",
-  alias: ["wah", "💋", "❤️", "🙂", "nice", "ok"],
+  alias: ["wah", "ohh", "oho", "🙂", "nice", "ok"],
   desc: "Owner Only - retrieve quoted message back to user",
   category: "owner",
   filename: __filename
