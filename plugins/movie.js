@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { cmd } = require('../command');
+const config = require('../config'); // Ensure your API key is in config
 
 cmd({
     pattern: "movie",
@@ -8,71 +9,51 @@ cmd({
     react: "🎬",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, sender, args }) => {
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        // Properly extract the movie name from arguments
-        const movieName = args.length > 0 ? args.join(' ') : m.text.replace(/^[\.\#\$\!]?movie\s?/i, '').trim();
-        
+        const movieName = args.join(' ');
         if (!movieName) {
-            return reply("📽️ Please provide the name of the movie.\nExample: .movie Iron Man");
+            return reply("📽️ Please provide the name of the movie.");
         }
 
-        const apiUrl = `${GiftedTechApi}/api/search/movie?apikey=${GiftedApiKey}&query=${encodeURIComponent(q)}}`;
+        const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
         const response = await axios.get(apiUrl);
 
-        if (!response.data.status || !response.data.movie) {
-            return reply("🚫 Movie not found. Please check the name and try again.");
+        const data = response.data;
+        if (data.Response === "False") {
+            return reply("🚫 Movie not found.");
         }
 
-        const movie = response.data.movie;
-        
-        // Format the caption
-        const dec = `
-🎬 *${movie.title}* (${movie.year}) ${movie.rated || ''}
+        const movieInfo = `
+🎬 *Silva Spark Movie Information* 🎬
 
-⭐ *IMDb:* ${movie.imdbRating || 'N/A'} | 🍅 *Rotten Tomatoes:* ${movie.ratings.find(r => r.source === 'Rotten Tomatoes')?.value || 'N/A'} | 💰 *Box Office:* ${movie.boxoffice || 'N/A'}
-
-📅 *Released:* ${new Date(movie.released).toLocaleDateString()}
-⏳ *Runtime:* ${movie.runtime}
-🎭 *Genre:* ${movie.genres}
-
-📝 *Plot:* ${movie.plot}
-
-🎥 *Director:* ${movie.director}
-✍️ *Writer:* ${movie.writer}
-🌟 *Actors:* ${movie.actors}
-
-🌍 *Country:* ${movie.country}
-🗣️ *Language:* ${movie.languages}
-🏆 *Awards:* ${movie.awards || 'None'}
-
-[View on IMDb](${movie.imdbUrl})
+🎥 *Title:* ${data.Title}
+📅 *Year:* ${data.Year}
+🌟 *Rated:* ${data.Rated}
+📆 *Released:* ${data.Released}
+⏳ *Runtime:* ${data.Runtime}
+🎭 *Genre:* ${data.Genre}
+🎬 *Director:* ${data.Director}
+✍️ *Writer:* ${data.Writer}
+🎭 *Actors:* ${data.Actors}
+📝 *Plot:* ${data.Plot}
+🌍 *Language:* ${data.Language}
+🇺🇸 *Country:* ${data.Country}
+🏆 *Awards:* ${data.Awards}
+⭐ *IMDB Rating:* ${data.imdbRating}
+🗳️ *IMDB Votes:* ${data.imdbVotes}
 `;
 
-        // Send message with the requested format
-        await conn.sendMessage(
-            from,
-            {
-                image: { 
-                    url: movie.poster && movie.poster !== 'N/A' ? movie.poster : 'https://files.catbox.moe/4ggu0a.jpg'
-                },
-                caption: dec,
-                contextInfo: {
-                    mentionedJid: [sender],
-                    forwardingScore: 999,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363295141350550@newsletter',
-                        newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
-                        serverMessageId: 143
-                    }
-                }
-            },
-            { quoted: mek }
-        );
+        // Define the image URL
+        const imageUrl = data.Poster && data.Poster !== 'N/A' ? data.Poster : config.ALIVE_IMG;
 
+        // Send the movie information along with the poster image
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: `${movieInfo}\n> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`
+        }, { quoted: mek });
     } catch (e) {
-        console.error('Movie command error:', e);
+        console.log(e);
         reply(`❌ Error: ${e.message}`);
     }
 });
