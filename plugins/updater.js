@@ -1,93 +1,48 @@
-const { cmd } = require("../command");
-const { sleep } = require("../lib/functions");
-const config = require("../config");
+const fs = require('fs');
+const { exec } = require('child_process');
+const { cmd } = require('../command');
 
 cmd({
     pattern: "update",
-    alias: ["upgrade", "sync", "restart"],
-    desc: "Update and restart the bot system",
-    category: "owner",
-    react: "🚀",
-    filename: __filename
+    react: "🦄",
+    desc: "Update the repository from GitHub",
+    category: "system",
+    use: ".update",
+    filename: __filename,
 }, async (conn, mek, m, { from, reply }) => {
     try {
-        // ✅ OWNER CHECK (HEROKU SAFE)
-        const ownerJid = config.OWNER_NUMBER.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
-        const senderJid = m.sender || m.key.participant;
+        const repoUrl = 'https://github.com/REY-MD/ZEZE-MD_V5.git'; // GitHub repository URL
+        const targetFolder = 'plugins'; // Local folder for the repo
 
-        if (senderJid !== ownerJid) {
-            return reply(`
-*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌*
-*│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
-*│📛 𝐎𝐖𝐍𝐄𝐑 𝐎𝐍𝐋𝐘 𝐂𝐎𝐌𝐌𝐀𝐍𝐃*
-*│❌ Access Denied*
-*╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-`);
+        // Ensure the target folder exists
+        if (!fs.existsSync(targetFolder)) {
+            fs.mkdirSync(targetFolder); // Create folder if it doesn't exist
         }
 
-        // ⏳ START MESSAGE
-        const msg = await conn.sendMessage(from, {
-            text: `
-*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌*
-*│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
-*│🚀 𝐈𝐧𝐢𝐭𝐢𝐚𝐭𝐢𝐧𝐠 𝐔𝐩𝐝𝐚𝐭𝐞*
-*│⏳ Please wait...*
-*╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-`
-        }, { quoted: mek });
+        // Determine the appropriate Git command
+        const gitCommand = fs.existsSync(`${targetFolder}/.git`)
+            ? `git -C ${targetFolder} pull` // Pull latest changes if already cloned
+            : `git clone ${repoUrl} ${targetFolder}`; // Clone repo if not already done
 
-        const steps = [
-            "🔍 Checking system files...",
-            "🛠️ Applying updates...",
-            "📦 Optimizing modules...",
-            "⚡ Finalizing changes...",
-            "♻️ Restarting services..."
-        ];
-
-        for (const step of steps) {
-            await sleep(1500);
-            await conn.relayMessage(from, {
-                protocolMessage: {
-                    key: msg.key,
-                    type: 14,
-                    editedMessage: {
-                        conversation: `
-*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌*
-*│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
-*│${step}*
-*╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-`
-                    }
+        // Execute the Git command
+        const output = await new Promise((resolve, reject) => {
+            exec(gitCommand, (err, stdout, stderr) => {
+                if (err) {
+                    reject(new Error(`Git command failed: ${stderr.trim()}`));
+                } else {
+                    resolve(stdout.trim());
                 }
-            }, {});
-        }
+            });
+        });
 
-        // ✅ FINISH MESSAGE
-        await conn.sendMessage(from, {
-            text: `
-*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-*│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌*
-*│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣*
-*│✅ 𝐔𝐩𝐝𝐚𝐭𝐞 𝐂𝐨𝐦𝐩𝐥𝐞𝐭𝐞*
-*│🔁 Restarting bot...*
-*╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭*
-
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-`
-        }, { quoted: mek });
-
-        await sleep(1000);
-
-        // 🔁 HEROKU SAFE RESTART
-        process.exit(0);
-
-    } catch (e) {
-        console.error("UPDATE ERROR:", e);
-        reply("❌ Update failed, check logs.");
+        // Send a success message with the output
+        await conn.sendMessage(
+            from,
+            { text: `*✅ Sl𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 Update completed successfully!*\n\n\`\`\`${output}\`\`\`` },
+            { quoted: mek }
+        );
+    } catch (error) {
+        console.error(error);
+        reply(`*❌ Error during update:* ${error.message}`);
     }
 });
