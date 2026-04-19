@@ -1,59 +1,168 @@
-const axios = require('axios');
 const { cmd } = require('../command');
-const config = require('../config'); // Ensure your API key is in config
+const axios = require('axios');
 
+// FakevCard sawa na zilizopita
+const fkontak = {
+    "key": {
+        "participant": '0@s.whatsapp.net',
+        "remoteJid": '0@s.whatsapp.net',
+        "fromMe": false,
+        "id": "Halo"
+    },
+    "message": {
+        "conversation": "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇"
+    }
+};
+
+const getContextInfo = (m) => {
+    return {
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363295141350550@newsletter',
+            newsletterName: '© 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
+            serverMessageId: 143,
+        }
+    };
+};
+
+// ======== YOUR API KEY ========
+const SRIHUB_API = "dew_5H5Dbuh4v7NbkNRmI0Ns2u2ZK240aNnJ9lnYQXR9";
+
+// ======== SIMPLE CACHE ========
+global.movie_cache = global.movie_cache || {};
+
+// ================= MOVIE SEARCH =================
 cmd({
     pattern: "movie",
-    desc: "Fetch detailed information about a movie.",
-    category: "utility",
+    desc: "Search & download movies",
+    category: "media",
     react: "🎬",
     filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (conn, mek, m, { from, args, reply, sender }) => {
     try {
-        const movieName = args.join(' ');
-        if (!movieName) {
-            return reply("📽️ Please provide the name of the movie.");
+        const query = args.join(" ").trim();
+        if (!query) {
+            return await conn.sendMessage(from, { 
+                text: "🎬 *𝚄𝚜𝚊𝚐𝚎:* `.movie venom`\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+                contextInfo: getContextInfo({ sender: sender })
+            }, { quoted: fkontak });
         }
 
-        const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
-        const response = await axios.get(apiUrl);
+        // --------------- SEARCH -------------------
+        const searchRes = await axios.get(
+            "https://api.srihub.store/movie/sinhalasub",
+            {
+                params: { apikey: SRIHUB_API, query },
+                timeout: 15000,
+                headers: { "User-Agent": "Mozilla/5.0", "Accept": "application/json" }
+            }
+        );
 
-        const data = response.data;
-        if (data.Response === "False") {
-            return reply("🚫 Movie not found.");
+        if (!searchRes.data || searchRes.data.success !== true || !Array.isArray(searchRes.data.result) || searchRes.data.result.length === 0) {
+            return await conn.sendMessage(from, { 
+                text: "❌ 𝙼𝚘𝚟𝚒𝚎 𝚗𝚘𝚝 𝚏𝚘𝚞𝚗𝚍.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+                contextInfo: getContextInfo({ sender: sender })
+            }, { quoted: fkontak });
         }
 
-        const movieInfo = `
-🎬 *Silva Spark Movie Information* 🎬
+        const moviePageUrl = searchRes.data.result[0].link;
 
-🎥 *Title:* ${data.Title}
-📅 *Year:* ${data.Year}
-🌟 *Rated:* ${data.Rated}
-📆 *Released:* ${data.Released}
-⏳ *Runtime:* ${data.Runtime}
-🎭 *Genre:* ${data.Genre}
-🎬 *Director:* ${data.Director}
-✍️ *Writer:* ${data.Writer}
-🎭 *Actors:* ${data.Actors}
-📝 *Plot:* ${data.Plot}
-🌍 *Language:* ${data.Language}
-🇺🇸 *Country:* ${data.Country}
-🏆 *Awards:* ${data.Awards}
-⭐ *IMDB Rating:* ${data.imdbRating}
-🗳️ *IMDB Votes:* ${data.imdbVotes}
-`;
+        // --------------- DETAILS -------------------
+        const detailRes = await axios.get(
+            "https://api.srihub.store/movie/sinhalasubdl",
+            {
+                params: { apikey: SRIHUB_API, url: moviePageUrl },
+                timeout: 15000,
+                headers: { "User-Agent": "Mozilla/5.0", "Accept": "application/json" }
+            }
+        );
 
-        // Define the image URL
-        const imageUrl = data.Poster && data.Poster !== 'N/A' ? data.Poster : config.ALIVE_IMG;
+        if (!detailRes.data || detailRes.data.success !== true) {
+            return await conn.sendMessage(from, { 
+                text: "❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚏𝚎𝚝𝚌𝚑 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚕𝚒𝚗𝚔𝚜.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+                contextInfo: getContextInfo({ sender: sender })
+            }, { quoted: fkontak });
+        }
 
-        // Send the movie information along with the poster image
-        await conn.sendMessage(from, {
-            image: { url: imageUrl },
-            caption: `${movieInfo}\n> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`
-        }, { quoted: mek });
+        const movie = detailRes.data.result;
+        if (!movie || !Array.isArray(movie.downloads) || movie.downloads.length === 0) {
+            return await conn.sendMessage(from, { 
+                text: "❌ 𝙽𝚘 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍𝚊𝚋𝚕𝚎 𝚏𝚒𝚕𝚎𝚜 𝚏𝚘𝚞𝚗𝚍.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+                contextInfo: getContextInfo({ sender: sender })
+            }, { quoted: fkontak });
+        }
+
+        // --------------- AUTO SD 480P FIRST -------------------
+        movie.downloads.sort((a, b) => {
+            if (a.quality.includes("480")) return -1;
+            if (b.quality.includes("480")) return 1;
+            return 0;
+        });
+
+        // --------------- CACHE -------------------
+        global.movie_cache[from] = {
+            title: movie.title || "Movie",
+            downloads: movie.downloads
+        };
+
+        // --------------- MENU -------------------
+        let caption = `╭━━〔 🎬 *${movie.title}* 〕━━┈⊷\n┃\n`;
+        movie.downloads.forEach((d, i) => {
+            caption += `┃ ${i + 1} | ${d.quality} 📁\n`;
+        });
+        caption += `┃\n┃ 𝚁𝚎𝚙𝚕𝚢 𝚠𝚒𝚝𝚑 𝚊 𝚗𝚞𝚖𝚋𝚎𝚛 (1–${movie.downloads.length})\n┃\n╰━━━━━━━━━━━━━━━━━━┈⊷\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`;
+
+        await conn.sendMessage(from, { 
+            image: { url: movie.poster }, 
+            caption,
+            contextInfo: getContextInfo({ sender: sender })
+        }, { quoted: fkontak });
+
+    } catch (err) {
+        console.error("MOVIE ERROR:", err?.response?.data || err.message);
+        await conn.sendMessage(from, { 
+            text: "⚠️ 𝙼𝚘𝚟𝚒𝚎 𝚜𝚎𝚛𝚟𝚒𝚌𝚎 𝚎𝚛𝚛𝚘𝚛. 𝚃𝚛𝚢 𝚊𝚐𝚊𝚒𝚗 𝚕𝚊𝚝𝚎𝚛.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+            contextInfo: getContextInfo({ sender: sender })
+        }, { quoted: fkontak });
+    }
+});
+
+// ================= QUALITY SELECTION =================
+cmd({ on: "text" }, async (conn, mek, m, { from, body, sender }) => {
+    try {
+        if (!global.movie_cache[from]) return;
+        if (body.startsWith(".") || body.startsWith("/")) return;
+
+        const index = parseInt(body.trim()) - 1;
+        const cache = global.movie_cache[from];
+
+        if (isNaN(index) || !cache.downloads[index]) return;
+
+        const selected = cache.downloads[index];
+
+        await conn.sendMessage(from, { react: { text: "📥", key: mek.key } });
+
+        await conn.sendMessage(
+            from,
+            {
+                document: { url: selected.url },
+                mimetype: "video/mp4",
+                fileName: `${cache.title} (${selected.quality}).mp4`,
+                caption: `🎬 *${cache.title}*\n𝚀𝚞𝚊𝚕𝚒𝚝𝚢: ${selected.quality}\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                contextInfo: getContextInfo({ sender: sender })
+            },
+            { quoted: fkontak }
+        );
+
     } catch (e) {
-        console.log(e);
-        reply(`❌ Error: ${e.message}`);
+        console.error("Movie selection error:", e);
+        await conn.sendMessage(from, { 
+            text: "❌ 𝙵𝚊𝚒𝚕𝚎𝚍 𝚝𝚘 𝚜𝚎𝚗𝚍 𝚏𝚒𝚕𝚎.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇", 
+            contextInfo: getContextInfo({ sender: sender })
+        }, { quoted: fkontak });
+    } finally {
+        delete global.movie_cache[from];
     }
 });
