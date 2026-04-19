@@ -1,169 +1,161 @@
-const { cmd } = require('../command')
-const axios = require('axios')
-const yts = require('yt-search')
-const fs = require('fs')
-const path = require('path')
-const ffmpeg = require('fluent-ffmpeg')
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path
+const { cmd } = require('../command');
+const yts = require('yt-search');
+const axios = require('axios');
+const { silainfo, myquoted } = require('../config');
 
-ffmpeg.setFfmpegPath(ffmpegPath)
-
-// ── GiftedTech API ──
-const GiftedTechApi = "https://apis.davidcyriltech.my.id"
-const GiftedApiKey = "gifted-md"
-
+//=========== VIDEO COMMAND ===========//
 cmd({
     pattern: "video",
-    alias: ["vid", "playvideo"],
-    desc: "YouTube video downloader",
-    category: "download",
-    react: "🎬",
+    alias: ["ytmp4", "mp4", "ytv", "vi", "v", "vid", "vide", "videos", "silavideo", "ytvid", "ytvide", "ytvideos", "searchyt", "download", "get", "need", "search"],
+    desc: "Download YouTube MP4",
+    category: "media",
+    react: "📽️",
     filename: __filename
-}, async (conn, mek, m, { from, text, reply }) => {
+},
+async (conn, mek, m, { from, reply, args }) => {
     try {
-        if (!text) {
-            return reply("❌ Video ka naam ya link likho\nExample:\n.video la la la song")
+        if (!args || args.length === 0) {
+            await conn.sendMessage(
+                from,
+                {
+                    text: `╔► 𝐕𝐈𝐃𝐄𝐎 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 📽️\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐯𝐢𝐝𝐞𝐨 𝐧𝐚𝐦𝐞\n\n╔► 𝐄𝐱𝐚𝐦𝐩𝐥𝐞:\n╚► → .𝐯𝐢𝐝𝐞𝐨 𝐬𝐨𝐧𝐠 𝐧𝐚𝐦𝐞\n╚► → .𝐯𝐢𝐝𝐞𝐨 𝐘𝐨𝐮𝐓𝐮𝐛𝐞 𝐮𝐫𝐥\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                    ...silainfo()
+                },
+                { quoted: myquoted }
+            );
+            return;
         }
 
-        // 🔍 YouTube search
-        const search = await yts(text)
+        const text = args.join(' ');
+        
+        // Send searching message
+        await conn.sendMessage(
+            from,
+            {
+                text: `╔► 𝐒𝐄𝐀𝐑𝐂𝐇𝐈𝐍𝐆 🔍\n╚► → ${text}\n\n⏳ 𝐏𝐥𝐞𝐚𝐬𝐞 𝐰𝐚𝐢𝐭...\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                ...silainfo()
+            },
+            { quoted: myquoted }
+        );
+
+        // Search YouTube
+        const search = await yts(text);
         if (!search.videos.length) {
-            return reply("❌ Video nahi mila")
+            await conn.sendMessage(
+                from,
+                {
+                    text: `╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐍𝐨 𝐯𝐢𝐝𝐞𝐨 𝐟𝐨𝐮𝐧𝐝\n\n╔► 𝐓𝐫𝐲:\n╚► → 𝐃𝐢𝐟𝐟𝐞𝐫𝐞𝐧𝐭 𝐧𝐚𝐦𝐞\n╚► → 𝐂𝐡𝐞𝐜𝐤 𝐬𝐩𝐞𝐥𝐥𝐢𝐧𝐠\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                    ...silainfo()
+                },
+                { quoted: myquoted }
+            );
+            return;
         }
 
-        const vid = search.videos[0]
+        const data = search.videos[0];
+        const ytUrl = data.url;
 
-        // 🎨 Info message
-        await conn.sendMessage(from, {
-            image: { url: vid.thumbnail },
-            caption: `
-╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│ ╌─̇─̣⊰ 𝐙𝐄𝐙𝐄-𝐌𝐃_𝐕𝟓 ⊱┈─̇─̣╌
-│─̇─̣┄┄┄┄┄┄┄┄┄┄┄┄┄─̇─̣
-│❀ 🎬 𝐓𝐢𝐭𝐥𝐞: ${vid.title}
-│❀ ⏱️ 𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${vid.timestamp}
-│❀ ⏳ 𝐒𝐭𝐚𝐭𝐮𝐬: Processing video...
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
+        // YouTube download API
+        const api = `https://gtech-api-xtp1.onrender.com/api/video/yt?apikey=APIKEY&url=${encodeURIComponent(ytUrl)}`;
+        const { data: apiRes } = await axios.get(api);
 
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-`
-        }, { quoted: mek })
-
-        let dlUrl = null
-        let title = vid.title
-        let quality = "360p"
-
-        // ── HATUA 1: Arslan API ──
-        try {
-            console.log("🔄 Trying Arslan API...")
-            const res = await axios.get(
-                `https://arslan-apis.vercel.app/download/ytmp4?url=${encodeURIComponent(vid.url)}`,
-                { timeout: 30000 }
-            )
-            if (res.data?.status && res.data?.result?.download?.url) {
-                dlUrl = res.data.result.download.url
-                title = res.data.result.metadata?.title || title
-                quality = res.data.result.download?.quality || quality
-                console.log("✅ Arslan API ikafanikiwa!")
-            }
-        } catch (e) {
-            console.log("❌ Arslan API imefail:", e.message)
+        if (!apiRes?.status || !apiRes.result?.media?.video_url) {
+            throw new Error('𝐕𝐢𝐝𝐞𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐟𝐚𝐢𝐥𝐞𝐝');
         }
 
-        // ── HATUA 2: GiftedTech API (backup) ──
-        if (!dlUrl) {
+        const result = apiRes.result.media;
+
+        // Create caption with video info
+        const caption = `╔► 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 𝐕𝐈𝐃𝐄𝐎 📽️\n╚► → ${data.title}\n\n╔► 𝐕𝐢𝐝𝐞𝐨 𝐈𝐧𝐟𝐨:\n╚► → 𝐕𝐢𝐞𝐰𝐬: ${data.views}\n╚► → 𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧: ${data.timestamp}\n╚► → 𝐀𝐮𝐭𝐡𝐨𝐫: ${data.author.name}\n\n╔► 𝐂𝐡𝐨𝐨𝐬𝐞 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐓𝐲𝐩𝐞:\n╚► → 𝟏 = 𝐒𝐢𝐦𝐩𝐥𝐞 𝐕𝐢𝐝𝐞𝐨\n╚► → 𝟐 = 𝐕𝐢𝐝𝐞𝐨 𝐅𝐢𝐥𝐞\n\n╔► 𝐑𝐞𝐩𝐥𝐲 𝐰𝐢𝐭𝐡 𝟏 𝐨𝐫 𝟐:\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`;
+
+        // Send video info with thumbnail
+        const sentMsg = await conn.sendMessage(
+            from,
+            {
+                image: { url: result.thumbnail || data.thumbnail },
+                caption: caption,
+                ...silainfo()
+            },
+            { quoted: myquoted }
+        );
+
+        const messageID = sentMsg.key.id;
+
+        // Listen for user reply
+        const listener = async (msgData) => {
             try {
-                console.log("🔄 Trying GiftedTech API...")
-                const res = await axios.get(
-                    `${GiftedTechApi}/api/download/ytmp4?apikey=${GiftedApiKey}&url=${encodeURIComponent(vid.url)}`,
-                    { timeout: 30000 }
-                )
-                const d = res.data
-                const link =
-                    d?.result?.download?.url ||
-                    d?.result?.download_url ||
-                    d?.result?.link ||
-                    d?.link ||
-                    d?.url
-                if (link) {
-                    dlUrl = link
-                    title = d?.result?.metadata?.title || d?.result?.title || d?.title || title
-                    quality = d?.result?.download?.quality || quality
-                    console.log("✅ GiftedTech API ikafanikiwa!")
+                const receivedMsg = msgData.messages?.[0];
+                if (!receivedMsg?.message) return;
+
+                const receivedText = receivedMsg.message.conversation || 
+                                   receivedMsg.message.extendedTextMessage?.text;
+                
+                const isReplyToBot = receivedMsg.message.extendedTextMessage?.contextInfo?.stanzaId === messageID;
+                const senderID = receivedMsg.key.remoteJid;
+
+                if (isReplyToBot && senderID === from) {
+                    switch (receivedText.trim()) {
+                        case "1":
+                            await conn.sendMessage(
+                                from,
+                                {
+                                    video: { url: result.video_url },
+                                    mimetype: "video/mp4",
+                                    caption: `╔► 𝐕𝐈𝐃𝐄𝐎 𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 ✅\n╚► → ${data.title}\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                                    ...silainfo()
+                                },
+                                { quoted: myquoted }
+                            );
+                            break;
+
+                        case "2":
+                            await conn.sendMessage(
+                                from,
+                                {
+                                    document: { url: result.video_url },
+                                    mimetype: "video/mp4",
+                                    fileName: `${data.title.replace(/[<>:"/\\|?*]/g, '')}.mp4`,
+                                    caption: `╔► 𝐕𝐈𝐃𝐄𝐎 𝐅𝐈𝐋𝐄 📄\n╚► → ${data.title}\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                                    ...silainfo()
+                                },
+                                { quoted: myquoted }
+                            );
+                            break;
+
+                        default:
+                            await conn.sendMessage(
+                                from,
+                                {
+                                    text: `╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐏𝐥𝐞𝐚𝐬𝐞 𝐫𝐞𝐩𝐥𝐲 𝐰𝐢𝐭𝐡 𝟏 𝐨𝐫 𝟐\n\n╔► 𝟏 = 𝐒𝐢𝐦𝐩𝐥𝐞 𝐕𝐢𝐝𝐞𝐨\n╚► 𝟐 = 𝐕𝐢𝐝𝐞𝐨 𝐅𝐢𝐥𝐞\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                                    ...silainfo()
+                                },
+                                { quoted: myquoted }
+                            );
+                    }
+                    
+                    // Remove listener after handling
+                    conn.ev.off('messages.upsert', listener);
                 }
-            } catch (e) {
-                console.log("❌ GiftedTech API imefail:", e.message)
+            } catch (error) {
+                console.error("Reply handler error:", error);
             }
-        }
+        };
 
-        // ── Zote zimefail ──
-        if (!dlUrl) return reply("❌ Video download error, thori dair baad try karo")
+        // Set timeout for listener
+        conn.ev.on('messages.upsert', listener);
+        setTimeout(() => {
+            conn.ev.off('messages.upsert', listener);
+        }, 60000); // 1 minute timeout
 
-        // 📂 temp folder
-        const tempDir = path.join(__dirname, '../temp')
-        if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir)
-
-        const rawPath = path.join(tempDir, `raw_${Date.now()}.mp4`)
-        const finalPath = path.join(tempDir, `final_${Date.now()}.mp4`)
-
-        // ⬇ Download raw video
-        const stream = await axios({
-            url: dlUrl,
-            method: "GET",
-            responseType: "stream",
-            timeout: 120000
-        })
-
-        await new Promise((resolve, reject) => {
-            const w = fs.createWriteStream(rawPath)
-            stream.data.pipe(w)
-            w.on("finish", resolve)
-            w.on("error", reject)
-        })
-
-        // 🛠️ FFMPEG
-        await new Promise((resolve, reject) => {
-            ffmpeg(rawPath)
-                .outputOptions([
-                    "-map 0:v:0",
-                    "-map 0:a:0?",
-                    "-movflags +faststart",
-                    "-pix_fmt yuv420p",
-                    "-vf scale=trunc(iw/2)*2:trunc(ih/2)*2",
-                    "-profile:v baseline",
-                    "-level 3.0"
-                ])
-                .videoCodec("libx264")
-                .audioCodec("aac")
-                .audioBitrate("128k")
-                .format("mp4")
-                .on("end", resolve)
-                .on("error", reject)
-                .save(finalPath)
-        })
-
-        // 📤 Send final video
-        await conn.sendMessage(from, {
-            video: fs.readFileSync(finalPath),
-            mimetype: "video/mp4",
-            caption: `
-╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-│❀ 🎬 𝐓𝐢𝐭𝐥𝐞: ${title}
-│❀ 📀 𝐐𝐮𝐚𝐥𝐢𝐭𝐲: ${quality}
-│❀ 📁 𝐅𝐨𝐫𝐦𝐚𝐭: MP4
-╰┄─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣─̇─̣─᛭
-
-> 📌 ᴘᴏᴡᴇʀ ʙʏ 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇
-`
-        }, { quoted: mek })
-
-        // 🧹 cleanup
-        fs.unlinkSync(rawPath)
-        fs.unlinkSync(finalPath)
-
-    } catch (err) {
-        console.error("VIDEO ERROR:", err)
-        reply("❌ Video processing error, thori dair baad try karo")
+    } catch (error) {
+        console.error("Video command error:", error);
+        await conn.sendMessage(
+            from,
+            {
+                text: `╔► 𝐄𝐫𝐫𝐨𝐫: ❌\n╚► → 𝐕𝐢𝐝𝐞𝐨 𝐝𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐟𝐚𝐢𝐥𝐞𝐝\n\n╔► 𝐑𝐞𝐚𝐬𝐨𝐧:\n╚► → ${error.message}\n\n> © 𝐏𝐨𝐰𝐞𝐫𝐝 𝐁𝐲 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+                ...silainfo()
+            },
+            { quoted: myquoted }
+        );
     }
-})
-
+});
