@@ -1,249 +1,186 @@
-const { cmd } = require('../command');
-const config = require('../config');
+const { cmd } = require("../command");
+const config = require("../config");
 
-// ==============================
-// 🚫 ANTI-BAD WORD FILTER
-// ==============================
-cmd({
-    on: "body"
-}, async (conn, mek, m, {
-    from,
-    body,
-    isGroup,
-    isAdmins,
-    isBotAdmins,
-    reply,
-    sender
-}) => {
-    try {
-        // List of bad words to filter
-        const badWords = [
-            "wtf", "mia", "xxx", "fuck", "sex", 
-            "huththa", "pakaya", "ponnaya", "hutto",
-            "bitch", "ass", "dick", "pussy", "cunt",
-            "shit", "bastard", "damn", "hell"
-        ];
-
-        // Only run in groups where bot is admin and user is not admin
-        if (!isGroup || isAdmins || !isBotAdmins || config.ANTI_BAD !== "true") {
-            return;
-        }
-
-        const messageText = body.toLowerCase();
-        const containsBadWord = badWords.some(word => {
-            const regex = new RegExp(`\\b${word}\\b`, 'i');
-            return regex.test(messageText);
-        });
-
-        if (containsBadWord) {
-            // Delete the message
-            await conn.sendMessage(from, {
-                delete: mek.key
-            });
-
-            // Send warning message
-            await conn.sendMessage(from, {
-                text: `🚫 *⚠️ BAD WORD DETECTED ⚠️*\n\n💎 *Silva Spark MD* detected inappropriate language.\n\n👤 *User:* @${sender.split('@')[0]}\n⚠️ *Action:* Message deleted\n📝 *Reminder:* Please maintain respectful communication in this group.`,
-                mentions: [sender]
-            }, {
-                quoted: mek
-            });
-
-            console.log(`[ANTI-BAD-WORD] Deleted message from ${sender.split('@')[0]} in ${from}`);
-        }
-    } catch (error) {
-        console.error('[ANTI-BAD-WORD ERROR]:', error);
-        reply("⚠️ An error occurred while filtering bad words.");
+// FakevCard sawa na zilizopita
+const fkontak = {
+    "key": {
+        "participant": '0@s.whatsapp.net',
+        "remoteJid": '0@s.whatsapp.net',
+        "fromMe": false,
+        "id": "Halo"
+    },
+    "message": {
+        "conversation": "𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇"
     }
-});
+};
 
-// ==============================
-// 🔗 ANTI-LINK FILTER
-// ==============================
-const linkPatterns = [
-    // WhatsApp links
-    /https?:\/\/(?:chat\.whatsapp\.com|wa\.me)\/\S+/gi,
-    /^https?:\/\/(www\.)?whatsapp\.com\/channel\/([a-zA-Z0-9_-]+)$/,
-    /wa\.me\/\S+/gi,
-    
-    // Telegram links
-    /https?:\/\/(?:t\.me|telegram\.me)\/\S+/gi,
-    
-    // YouTube links
-    /https?:\/\/(?:www\.)?youtube\.com\/\S+/gi,
-    /https?:\/\/youtu\.be\/\S+/gi,
-    
-    // Social media links
-    /https?:\/\/(?:www\.)?facebook\.com\/\S+/gi,
-    /https?:\/\/fb\.me\/\S+/gi,
-    /https?:\/\/(?:www\.)?instagram\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?twitter\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?x\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?tiktok\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?linkedin\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?snapchat\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?pinterest\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?reddit\.com\/\S+/gi,
-    
-    // Other platforms
-    /https?:\/\/ngl\.link\/\S+/gi,
-    /https?:\/\/(?:www\.)?discord\.(?:com|gg)\/\S+/gi,
-    /https?:\/\/(?:www\.)?twitch\.tv\/\S+/gi,
-    /https?:\/\/(?:www\.)?vimeo\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?dailymotion\.com\/\S+/gi,
-    /https?:\/\/(?:www\.)?medium\.com\/\S+/gi,
-    
-    // Generic URL pattern (catches most links)
-    /https?:\/\/\S+\.\S+/gi
-];
+const getContextInfo = (m) => {
+    return {
+        mentionedJid: [m.sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363295141350550@newsletter',
+            newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
+            serverMessageId: 143,
+        },
+    };
+};
 
-cmd({
-    on: "body"
-}, async (conn, mek, m, {
-    from,
-    body,
-    sender,
-    isGroup,
-    isAdmins,
-    isBotAdmins,
-    reply
-}) => {
-    try {
-        // Only run in groups where bot is admin and user is not admin
-        if (!isGroup || isAdmins || !isBotAdmins || config.ANTI_LINK !== 'true') {
-            return;
-        }
+// Memory for warnings
+const userWarnings = new Set();
+const warningCount = {};
 
-        // Check if message contains any link
-        const containsLink = linkPatterns.some(pattern => pattern.test(body));
+// === Anti-Link Event Handler ===
+cmd({ on: "body" }, async (client, message, chat, { from, sender, isGroup, isAdmins, isOwner, body }) => {
+  try {
+    // Basic checks: Only groups, no admins, no owner, must be enabled
+    if (!isGroup || isAdmins || isOwner || !config.ANTI_LINK) return;
 
-        if (containsLink) {
-            // Delete the message
-            await conn.sendMessage(from, {
-                delete: mek.key
-            });
+    // Accurate Regex for ALL links (http, https, www, and domains like .com, .net, .ke, etc.)
+    const linkRegex = /((https?:\/\/|www\.)[^\s]+|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?)/gi;
 
-            // Send warning and remove user
-            await conn.sendMessage(from, {
-                text: `🚫 *⚠️ LINK DETECTED ⚠️*\n\n💎 *Silva Spark MD* detected an unauthorized link.\n\n👤 *User:* @${sender.split('@')[0]}\n⚠️ *Action:* User removed from group\n📝 *Reason:* Links are not allowed in this group.`,
-                mentions: [sender]
-            }, {
-                quoted: mek
-            });
+    if (linkRegex.test(body)) {
+      const mode = config.ANTILINK_MODE || 'delete';
 
-            // Remove user from group
-            await conn.groupParticipantsUpdate(from, [sender], "remove");
+      // 1. Delete the message first
+      await client.sendMessage(from, { delete: message.key });
 
-            console.log(`[ANTI-LINK] Removed ${sender.split('@')[0]} from ${from} for posting link`);
-        }
-    } catch (error) {
-        console.error('[ANTI-LINK ERROR]:', error);
+      // 2. Handle Actions (Warn, Kick, or just Delete)
+      if (mode === 'warn') {
+        warningCount[sender] = (warningCount[sender] || 0) + 1;
         
-        // If removal fails, just delete message and warn
-        if (error.message.includes('forbidden') || error.message.includes('not authorized')) {
-            reply("⚠️ I don't have permission to remove members. Please make me an admin.");
+        if (warningCount[sender] >= 3) {
+          await client.sendMessage(from, { 
+            text: `🚫 @${sender.split("@")[0]} 𝚛𝚎𝚊𝚌𝚑𝚎𝚍 𝟹/𝟹 𝚠𝚊𝚛𝚗𝚒𝚗𝚐𝚜 𝚊𝚗𝚍 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 𝚛𝚎𝚖𝚘𝚟𝚎𝚍.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`, 
+            mentions: [sender],
+            contextInfo: getContextInfo({ sender: sender })
+          }, { quoted: fkontak });
+          await client.groupParticipantsUpdate(from, [sender], "remove");
+          delete warningCount[sender];
         } else {
-            reply("⚠️ An error occurred while processing the link.");
+          await client.sendMessage(from, { 
+            text: `⚠️ *𝙻𝚒𝚗𝚔 𝙳𝚎𝚝𝚎𝚌𝚝𝚎𝚍!* @${sender.split("@")[0]}\n\n𝚆𝚊𝚛𝚗𝚒𝚗𝚐: ${warningCount[sender]}/𝟹\n_𝚂𝚎𝚗𝚍𝚒𝚗𝚐 𝚕𝚒𝚗𝚔𝚜 𝚒𝚜 𝚜𝚝𝚛𝚒𝚌𝚝𝚕𝚢 𝚙𝚛𝚘𝚑𝚒𝚋𝚒𝚝𝚎𝚍!_\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`, 
+            mentions: [sender],
+            contextInfo: getContextInfo({ sender: sender })
+          }, { quoted: fkontak });
         }
+      } 
+      
+      else if (mode === 'kick') {
+        await client.sendMessage(from, { 
+          text: `🚫 *𝙻𝚒𝚗𝚔 𝙳𝚎𝚝𝚎𝚌𝚝𝚎𝚍!* @${sender.split("@")[0]} 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 𝚔𝚒𝚌𝚔𝚎𝚍.\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`, 
+          mentions: [sender],
+          contextInfo: getContextInfo({ sender: sender })
+        }, { quoted: fkontak });
+        await client.groupParticipantsUpdate(from, [sender], "remove");
+      } 
+      
+      else {
+        // Mode: Delete only
+        await client.sendMessage(from, { 
+          text: `🚫 *𝙻𝚒𝚗𝚔𝚜 𝚊𝚛𝚎 𝚗𝚘𝚝 𝚊𝚕𝚕𝚘𝚠𝚎𝚍 𝚑𝚎𝚛𝚎!*\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇`,
+          contextInfo: getContextInfo({ sender: sender })
+        }, { quoted: fkontak });
+      }
     }
+  } catch (error) {
+    console.error("❌ Anti-link handler error:", error);
+  }
 });
 
-// ==============================
-// 📝 COMMAND: Toggle Anti-Link
-// ==============================
+// === Anti-Link Command ===
 cmd({
-    pattern: "antilink",
-    alias: ["antilinkmode"],
-    desc: "Enable or disable anti-link protection",
-    category: "group",
-    react: "🔗",
-    filename: __filename
-}, async (conn, mek, m, {
-    from,
-    args,
-    isGroup,
-    isAdmins,
-    isBotAdmins,
-    reply
-}) => {
-    try {
-        if (!isGroup) {
-            return reply("❌ This command can only be used in groups.");
-        }
-
-        if (!isAdmins) {
-            return reply("❌ This command is only for group admins.");
-        }
-
-        if (!isBotAdmins) {
-            return reply("❌ I need to be an admin to use this feature.");
-        }
-
-        const mode = args[0]?.toLowerCase();
-
-        if (!mode || !["on", "off"].includes(mode)) {
-            return reply(`📝 *Anti-Link Status*\n\nCurrent: ${config.ANTI_LINK === 'true' ? '✅ Enabled' : '❌ Disabled'}\n\n*Usage:*\n${config.PREFIX}antilink on\n${config.PREFIX}antilink off`);
-        }
-
-        if (mode === "on") {
-            config.ANTI_LINK = "true";
-            reply("✅ Anti-Link protection has been *ENABLED*\n\nAll links will be deleted and users will be removed.");
-        } else {
-            config.ANTI_LINK = "false";
-            reply("❌ Anti-Link protection has been *DISABLED*\n\nUsers can now share links freely.");
-        }
-    } catch (error) {
-        console.error('[ANTILINK COMMAND ERROR]:', error);
-        reply("❌ An error occurred while toggling anti-link.");
+  pattern: "antilink",
+  alias: ["alink", "blocklink"],
+  desc: "Toggle and configure link blocking",
+  category: "group",
+  react: "🔗",
+  filename: __filename,
+},
+async (client, message, m, { isGroup, isAdmins, isOwner, from, sender, args, reply }) => {
+  try {
+    if (!isGroup) {
+      return await client.sendMessage(from, { 
+        text: "❌ 𝚃𝚑𝚒𝚜 𝚌𝚘𝚖𝚖𝚊𝚗𝚍 𝚒𝚜 𝚘𝚗𝚕𝚢 𝚏𝚘𝚛 𝚐𝚛𝚘𝚞𝚙𝚜!\n\n> © Powered by 𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇",
+        contextInfo: getContextInfo({ sender: sender })
+      }, { quoted: fkontak });
     }
-});
-
-// ==============================
-// 📝 COMMAND: Toggle Anti-Bad Word
-// ==============================
-cmd({
-    pattern: "antibad",
-    alias: ["antibadword", "antiswear"],
-    desc: "Enable or disable bad word filter",
-    category: "group",
-    react: "🚫",
-    filename: __filename
-}, async (conn, mek, m, {
-    from,
-    args,
-    isGroup,
-    isAdmins,
-    isBotAdmins,
-    reply
-}) => {
-    try {
-        if (!isGroup) {
-            return reply("❌ This command can only be used in groups.");
-        }
-
-        if (!isAdmins) {
-            return reply("❌ This command is only for group admins.");
-        }
-
-        if (!isBotAdmins) {
-            return reply("❌ I need to be an admin to use this feature.");
-        }
-
-        const mode = args[0]?.toLowerCase();
-
-        if (!mode || !["on", "off"].includes(mode)) {
-            return reply(`📝 *Anti-Bad Word Status*\n\nCurrent: ${config.ANTI_BAD === 'true' ? '✅ Enabled' : '❌ Disabled'}\n\n*Usage:*\n${config.PREFIX}antibad on\n${config.PREFIX}antibad off`);
-        }
-
-        if (mode === "on") {
-            config.ANTI_BAD = "true";
-            reply("✅ Bad word filter has been *ENABLED*\n\nInappropriate messages will be deleted automatically.");
-        } else {
-            config.ANTI_BAD = "false";
-            reply("❌ Bad word filter has been *DISABLED*");
-        }
-    } catch (error) {
-        console.error('[ANTIBAD COMMAND ERROR]:', error);
-        reply("❌ An error occurred while toggling bad word filter.");
+    
+    if (!isAdmins && !isOwner) {
+      return await client.sendMessage(from, { 
+        text: "🚫 *𝙰𝚍𝚖𝚒𝚗-𝚘𝚗𝚕𝚢 𝚌𝚘𝚖𝚖𝚊𝚗𝚍!*\n\n> © Powered by Sila Tech",
+        mentions: [sender],
+        contextInfo: getContextInfo({ sender: sender })
+      }, { quoted: fkontak });
     }
+
+    const action = args[0]?.toLowerCase() || 'status';
+    let statusText, reaction = "🔗", additionalInfo = "";
+
+    switch (action) {
+      case 'on':
+        config.ANTI_LINK = true;
+        statusText = "✅ 𝙰𝚗𝚝𝚒-𝚕𝚒𝚗𝚔 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 *𝙴𝙽𝙰𝙱𝙻𝙴𝙳*!";
+        reaction = "✅";
+        additionalInfo = "𝙰𝚕𝚕 𝚕𝚒𝚗𝚔𝚜 𝚠𝚒𝚕𝚕 𝚗𝚘𝚠 𝚋𝚎 𝚖𝚘𝚗𝚒𝚝𝚘𝚛𝚎𝚍 🛡️";
+        break;
+
+      case 'off':
+        config.ANTI_LINK = false;
+        statusText = "❌ 𝙰𝚗𝚝𝚒-𝚕𝚒𝚗𝚔 𝚑𝚊𝚜 𝚋𝚎𝚎𝚗 *𝙳𝙸𝚂𝙰𝙱𝙻𝙴𝙳*!";
+        reaction = "❌";
+        additionalInfo = "𝙻𝚒𝚗𝚔𝚜 𝚊𝚛𝚎 𝚗𝚘𝚠 𝚊𝚕𝚕𝚘𝚠𝚎𝚍 𝚒𝚗 𝚝𝚑𝚒𝚜 𝚐𝚛𝚘𝚞𝚙 🔓";
+        break;
+
+      case 'warn':
+      case 'kick':
+      case 'delete':
+        config.ANTI_LINK = true;
+        config.ANTILINK_MODE = action;
+        statusText = `⚙️ 𝙼𝚘𝚍𝚎 𝚜𝚎𝚝 𝚝𝚘 *${action.toUpperCase()}*`;
+        reaction = "🛡️";
+        additionalInfo = `𝙱𝚘𝚝 𝚠𝚒𝚕𝚕 𝚗𝚘𝚠 ${action} 𝚞𝚜𝚎𝚛𝚜 𝚜𝚎𝚗𝚍𝚒𝚗𝚐 𝚕𝚒𝚗𝚔𝚜.`;
+        break;
+
+      default:
+        statusText = `📌 𝙰𝚗𝚝𝚒-𝚕𝚒𝚗𝚔 𝚂𝚝𝚊𝚝𝚞𝚜: ${config.ANTI_LINK ? "✅ *𝙴𝙽𝙰𝙱𝙻𝙴𝙳*" : "❌ *𝙳𝙸𝚂𝙰𝙱𝙻𝙴𝙳*"}`;
+        additionalInfo = `𝙲𝚞𝚛𝚛𝚎𝚗𝚝 𝙼𝚘𝚍𝚎: *${config.ANTILINK_MODE || 'delete'}*\n\n*𝚄𝚜𝚊𝚐𝚎:* \n.antilink on/off\n.antilink warn/kick/delete`;
+        break;
+    }
+
+    // Send combined image + newsletter style message
+    await client.sendMessage(from, {
+      image: { url: "https://files.catbox.moe/sez5vx.jpg" },
+      caption: `
+${statusText}
+${additionalInfo}
+
+> © Powered by Sila Tech
+      `,
+      contextInfo: {
+        mentionedJid: [sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363295141350550@newsletter',
+          newsletterName: '𝐙𝐄𝐙𝐄-𝐓𝐄𝐂𝐇',
+          serverMessageId: 143
+        }
+      }
+    }, { quoted: fkontak });
+
+    // React to original command
+    await client.sendMessage(from, {
+      react: { text: reaction, key: message.key }
+    });
+
+  } catch (error) {
+    console.error("❌ Anti-link command error:", error);
+    await client.sendMessage(from, { 
+      text: `⚠️ 𝙴𝚛𝚛𝚘𝚛: ${error.message}\n\n> © Powered by Sila Tech`,
+      mentions: [sender],
+      contextInfo: getContextInfo({ sender: sender })
+    }, { quoted: fkontak });
+  }
 });
